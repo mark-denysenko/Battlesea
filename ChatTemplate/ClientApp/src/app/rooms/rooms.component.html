@@ -1,0 +1,27 @@
+<div class="room-holder">
+	<h2>Rooms</h2>
+	<hr>
+	<div *ngFor="let r of roomService.rooms" class="well" >
+		<p>Room: <b>{{ r.roomId }}</b></p>
+		<button (click)="roomService.deleteRoom(r.roomId)" class="btn btn-danger pull-right">Delete Room</button>
+
+		<button class="btn btn-success" *ngIf="currentRoom && r.roomId == currentRoom.roomId">
+			Joined!
+		</button>
+		<button (click)="roomService.joinRoom(r.roomId)" class="btn btn-info" *ngIf="!roomService.joinedRoom && (!r.firstPlayer || !r.secondPlayer)">
+			Join
+		</button>
+		<button (click)="roomService.exitRoom(r.roomId)" class="btn btn-dark" *ngIf="roomService.joinedRoom && roomService.joinedRoom.roomId == r.roomId">
+			Exit
+		</button>
+		<p class="text-center">
+			<span *ngIf="r.firstPlayer">{{ r.firstPlayer.nickname }}</span>
+			<b>VS</b>
+			<span *ngIf="r.secondPlayer">{{ r.secondPlayer.nickname }}</span>
+		</p>
+	</div>
+
+	<div>
+		<button (click)="roomService.createRoom()" class="btn btn-primary">Create Room</button>
+	</div>
+</div>
