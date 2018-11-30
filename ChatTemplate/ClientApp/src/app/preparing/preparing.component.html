@@ -1,15 +1,65 @@
-<p>
-  preparing works!
-</p>
-
-<div class="well battle-field">
-	<!-- <table>
-		*ngFor="let row of battlefield.cells[index]"  
-		<th *ngFor="let row of battlefield.cells; let i = index">
-			*ngFor="let cell of row[index]" 
-			<td *ngFor="let cell of row; let j = index">
-				
-			</td>
-		</th>
-	</table> -->
+<h2>Set up your ships!!!</h2>
+<hr>
+<div class="ship-error text-danger">
+	<h3>&nbsp;{{ errorMessage }}</h3>
+</div>
+<div class="well container-fluid battle-field">
+	<div class="row">
+		<div class="col-lg-9">
+			<table class="table-bordered text-center">
+				<tr>
+					<td>&nbsp;</td>
+					<td *ngFor="let row of battlefield.cells; let i = index">{{ i }}</td>
+				</tr>
+				<tr *ngFor="let row of battlefield.cells; let i = index">
+					<td>{{ i }}</td>
+					<td *ngFor="let cell of row; let j = index"
+						(click)="cellClick(cell)"
+					    [ngClass]="{ 
+					    	'cell-clear': cell.status == CellStatus.clear, 
+					    	'cell-selected': cell.status == CellStatus.selected, 
+					    	'cell-ship': cell.status == CellStatus.ship,
+					    	'cell-miss': cell.status == CellStatus.miss, 
+					    	'cell-hit': cell.status == CellStatus.hit
+					    }">&nbsp;
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-lg-3">
+			<div class="ship-types">
+				<ul>
+					<li *ngFor="let t of ShipType | enumToKeyArray" class="m-2">
+						<button (click)="selectType(t)"
+								[ngClass]="{ 'btn': true, 'btn-primary': t == ShipType[selectedType] }">
+							{{ t }}
+						</button>
+					</li>
+				</ul>
+			</div>
+			<button *ngIf="!isAllShipsSet()" (click)="createShip()" class="btn btn-success">Create Ship</button>
+			<button *ngIf="isAllShipsSet()" (click)="readyToBattle()" class="btn btn-warning">Ready</button>
+			<div>
+				<b>Total ships</b>
+				<ul>
+					<li>
+						SUBMARINEs: {{ getCurrentNumberOfShipsBySize(gameConfiguration.SIZE_SUBMARINE) }} 
+						(max: {{ gameConfiguration.NUMBER_SUBMARINE }})
+				</li>
+					<li>
+						DESTROYERs: {{ getCurrentNumberOfShipsBySize(gameConfiguration.SIZE_DESTROYER) }} 
+						(max: {{ gameConfiguration.NUMBER_DESTROYER }})
+					</li>
+					<li>
+						CRUISERs: {{ getCurrentNumberOfShipsBySize(gameConfiguration.SIZE_CRUISER) }} 
+						(max: {{ gameConfiguration.NUMBER_CRUISER }})
+					</li>
+					<li>
+						BATTLESHIPs: {{ getCurrentNumberOfShipsBySize(gameConfiguration.SIZE_BATTLESHIP) }} 
+						(max: {{ gameConfiguration.NUMBER_BATTLESHIP }})
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
 </div>

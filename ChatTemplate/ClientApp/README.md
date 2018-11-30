@@ -23,4 +23,9 @@ Configure Hub, Angular, ASP.NET Core in RT - 20h
 Rooms - 7h
 Joining Room - 1h
 Nicknames - 1h
+Subject<Player> - 3h
+Battlefield - 16h
+Back-end (api, hub func) - 10 h
+
+Markup and styles - 5h
 

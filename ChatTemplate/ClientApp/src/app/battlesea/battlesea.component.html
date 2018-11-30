@@ -1,7 +1,5 @@
-<div class="well">Game status {{ status }}</div>
-<div class="well">Player status {{ player.status }}</div>
 
-<div class="player-info" *ngIf="status == PlayerStatus.none">
+<div class="player-info" *ngIf="player.status == PlayerStatus.none">
 	<h3>Your Nickname:</h3>(save to get ID, anyway you have it =) )<br>
 	<input type="text" [(ngModel)]="player.nickname">
 	<button (click)="saveNickname()">Save!</button><br>
@@ -10,10 +8,11 @@
 	<i>{{ player.nickname }} - {{ player.id }}</i>
 </div>
 
-<app-rooms *ngIf="status == PlayerStatus.none">Choose room to play</app-rooms>
-<!-- <app-waiting *ngIf="status == PlayerStatus.joined">Waiting another player ...</app-waiting> -->
+<!-- Choose room for playing -->
+<app-rooms *ngIf="player.status == PlayerStatus.none">Rooms ...</app-rooms>
+
 <!-- waiting for another player -->
-<div *ngIf="status == PlayerStatus.joined" class="text-center">
+<div *ngIf="player.status == PlayerStatus.joined" class="text-center">
 	<h1>
 		Nickname: {{ player.nickname }}
 		<br>
@@ -23,10 +22,14 @@
 	<h1>???</h1><br>
 	<h4>waiting opponent ...</h4>
 </div>
-<!-- setting up ships -->
-<app-preparing *ngIf="status == PlayerStatus.preparing"></app-preparing>
-<app-battle-procces *ngIf="status == PlayerStatus.playing">Game proccess ...</app-battle-procces>
 
-<h1 class="text-center" *ngIf="status == PlayerStatus.disconnected">You were disconnected =(</h1>
+<!-- setting up ships -->
+<app-preparing *ngIf="player.status == PlayerStatus.preparing" (readyFunction)="readyToBattle($event)"></app-preparing>
+
+<div *ngIf="player.status == PlayerStatus.ready"><h2>Wait an opponent set up ships!</h2></div>
+
+<app-battle-procces *ngIf="player.status == PlayerStatus.playing">Game proccess ...</app-battle-procces>
+
+<h1 class="text-center" *ngIf="player.status == PlayerStatus.disconnected">You were disconnected =(</h1>
 
 

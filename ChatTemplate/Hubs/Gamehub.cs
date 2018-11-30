@@ -1,6 +1,7 @@
 ﻿using ChatTemplate.Models;
 using ChatTemplate.Services;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,12 @@ namespace ChatTemplate.Hubs
 {
     public class GameHub: Hub
     {
+        private const string startPlaying = "startPlaying";
+        private const string readyToBattle = "readyToBattle";
+        private const string preparing = "preparing";
+        private const string joinedToRoom = "joinedToRoom";
+        private const string roomsUpdate = "roomsUpdate";
+        private const string updatePlayer = "updatePlayer";
         private GameService _gameService { get; set; } = new GameService();
 
         public override Task OnConnectedAsync()
@@ -41,7 +48,7 @@ namespace ChatTemplate.Hubs
             GameRoom room = _gameService.JoinRoom(roomId, Context.ConnectionId);
             if (room != null)
             {
-                Clients.Caller.SendAsync("joinedToRoom");
+                Clients.Caller.SendAsync(joinedToRoom);
                 UpdateClientsRooms();
                 if(_gameService.IsTwoPlayers(room))
                     InvokeReadyToPreparing(room);
@@ -58,13 +65,33 @@ namespace ChatTemplate.Hubs
 
         public async Task InvokeReadyToPreparing(GameRoom room)
         {
-            await Clients.Client(room.firstPlayer.Id).SendAsync("preparing");
-            await Clients.Client(room.secondPlayer.Id).SendAsync("preparing");
+            await Clients.Client(room.firstPlayer.Id).SendAsync(preparing);
+            await Clients.Client(room.secondPlayer.Id).SendAsync(preparing);
+        }
+
+        public async Task UpdatePlayer(string connId = null)
+        {
+            if (connId == null)
+                connId = Context.ConnectionId;
+
+            await Clients.Client(connId).SendAsync(updatePlayer, _gameService.GetPlayerById(connId));
+        }
+
+        public async Task UpdateBattlefield(string battlefieldJSON)
+        {
+            Battlefield battlefield = JsonConvert.DeserializeObject<Battlefield>(battlefieldJSON);
+            GameRoom room = _gameService.UpdateBattlefield(battlefield, Context.ConnectionId);
+            await UpdatePlayer();
+            if(room.firstBattledield != null && room.secondBattlefield != null)
+            {
+                await Clients.Client(room.firstPlayer.Id).SendAsync(startPlaying);
+                await Clients.Client(room.secondPlayer.Id).SendAsync(startPlaying);
+            }
         }
 
         public async Task UpdateClientsRooms()
         {
-            await Clients.All.SendAsync("roomsUpdate");
+            await Clients.All.SendAsync(roomsUpdate, _gameService.GetAllRooms());
         }
 
         public Player GetPlayer()
@@ -82,7 +109,7 @@ namespace ChatTemplate.Hubs
             return Context.ConnectionId;
         }
 
-        public async Task SavePlayerNickname(string nickname)
+        public async Task<Player> SavePlayerNickname(string nickname)
         {
             Player player = _gameService.GetPlayerById(Context.ConnectionId);
             if(player != null)
@@ -94,6 +121,7 @@ namespace ChatTemplate.Hubs
                 player = _gameService.CreatePlayer(Context.ConnectionId, nickname);
             }
             await UpdateClientsRooms();
+            return player;
         }
     }
 }

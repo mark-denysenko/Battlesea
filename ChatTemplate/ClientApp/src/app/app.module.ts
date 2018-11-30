@@ -13,8 +13,8 @@ import { RoomService } from './services/room.service';
 import { RoomsComponent } from './rooms/rooms.component';
 import { BattleProccesComponent } from './battle-procces/battle-procces.component';
 import { PreparingComponent } from './preparing/preparing.component';
-import { WaitingComponent } from './waiting/waiting.component';
-
+import { GameService } from './services/game.service';
+import { EnumToKeyArrayPipe } from './enum-to-key-array.pipe';
 
 const routes = [
   { path: '', component: BattleseaComponent, pathMatch: 'full' },
@@ -31,7 +31,7 @@ const routes = [
     RoomsComponent,
     BattleProccesComponent,
     PreparingComponent,
-    WaitingComponent
+    EnumToKeyArrayPipe,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -39,7 +39,7 @@ const routes = [
     FormsModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [SignalRService, RoomService],
+  providers: [SignalRService, RoomService, GameService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -5,8 +5,9 @@ import { HttpClient } from '@angular/common/http';
 import { GameRoom } from '../models/gameroom';
 import { RoomService } from '../services/room.service';
 import { PlayerStatus } from '../models/player-status.enum';
-import { SignalRService } from '../services/signal-r.service';
 import { Player } from '../models/player';
+import { GameService } from '../services/game.service';
+import { Battlefield } from '../models/battlefield';
 
 @Component({
   selector: 'app-battlesea',
@@ -16,29 +17,20 @@ import { Player } from '../models/player';
 export class BattleseaComponent implements OnInit {
   PlayerStatus : typeof PlayerStatus = PlayerStatus;
 
-  public player: Player = new Player();
-  public status = PlayerStatus.none;
+  public player: Player;
 
-  constructor(private _signalr: SignalRService) {
-    _signalr.addListener('joinedToRoom', () => this.status = PlayerStatus.joined);
-    _signalr.addListener('preparing', () => this.status = PlayerStatus.preparing);
-
-    _signalr.addListener('readyToBattle', () => this.status = PlayerStatus.ready);
-
-    this.player.status = PlayerStatus.none;
-    console.log('Status player', this.status);
+  constructor(private gameService: GameService) {
+    gameService.player.subscribe(player => this.player = player);
   }
 
   ngOnInit() {
   }
 
   saveNickname() {
-    this._signalr.invoke('savePlayerNickname', this.player.nickname);
-    this._signalr.getConnectionId().then(id => this.player.id = id);
+    this.gameService.setNickname(this.player.nickname);
   }
 
-  // ready(): void {
-  //   // invoke ('readyToBattle')
-  //   this.status = PlayerStatus.ready;
-  // }
+  readyToBattle(battlefield: Battlefield): void {
+    this.gameService.setBattlefield(battlefield);
+  }
 }

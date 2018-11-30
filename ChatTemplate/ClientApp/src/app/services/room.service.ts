@@ -12,10 +12,10 @@ export class RoomService {
   constructor(private signalrService: SignalRService, private http: HttpClient, @Inject('BASE_URL') _baseUrl: string) {
   	this.requestUrl = _baseUrl + 'api/Game/';
 
-  	// i want to give callback - this.updateRooms ! but http undefined if hub calls it
-  	this.signalrService.addListener("roomsUpdate", () => this.http.get<GameRoom[]>(this.requestUrl + 'GetAllRooms').subscribe(result => {
-      this.rooms = result;
-      }, error => console.error(error)));
+  	this.signalrService.addListener("roomsUpdate", (rooms: GameRoom[]) => this.rooms = rooms);
+      // this.http.get<GameRoom[]>(this.requestUrl + 'GetAllRooms').subscribe(result => {
+      // this.rooms = result;
+      // }, error => console.error(error)));
   	this.updateRooms();
   }
 

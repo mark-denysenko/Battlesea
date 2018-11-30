@@ -1,24 +1,19 @@
+import { CellStatus } from './cell-status.enum';
 import { Cell } from './cell';
 import { Ship } from './ship';
 
 export class Battlefield {
 
-	cells: Cell[][];
-	ships: Ship[];
+	cells: Cell[][] = [];
+	ships: Ship[] = [];
 
-	// constructor() {
-
-	// }
-
-	// createShip(points: Cell[]): boolean {
-
-	// }
-
-	// private inRow(points: Cell[]): boolean {
-
-	// }
-
-	// private inCol(points: Cell[]): boolean {
-
-	// }
+	constructor(fieldSize: number) {
+        for(let i: number = 0; i < fieldSize; i++) {
+            this.cells[i] = [];
+            for(let j: number = 0; j < fieldSize; j++) {
+                this.cells[i][j] = new Cell(j, i);
+                this.cells[i][j].status = CellStatus.clear;
+            }
+        }
+	}
 }

@@ -70,15 +70,33 @@ namespace ChatTemplate.Services
                 if (room.firstPlayer == null)
                 {
                     room.firstPlayer = player;
+                    room.firstPlayer.status = PlayerStatus.joined;
                     return room;
                 }
                 else if (room.secondPlayer == null)
                 {
                     room.secondPlayer = player;
+                    room.secondPlayer.status = PlayerStatus.joined;
                     return room;
                 }
             }
             return null;
+        }
+
+        public GameRoom UpdateBattlefield(Battlefield battlefield, string playerId)
+        {
+            GameRoom room = GetRoomByUserId(playerId);
+            if (room.firstPlayer.Id == playerId)
+            {
+                room.firstBattledield = battlefield;
+                room.firstPlayer.status = PlayerStatus.ready;
+            }
+            else if (room.secondPlayer.Id == playerId)
+            {
+                room.secondBattlefield = battlefield;
+                room.secondPlayer.status = PlayerStatus.ready;
+            }
+            return room;
         }
 
         public bool IsTwoPlayers(GameRoom room)

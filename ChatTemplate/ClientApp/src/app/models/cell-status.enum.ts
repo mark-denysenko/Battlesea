@@ -1,6 +1,7 @@
 export enum CellStatus {
-
-  closed = 0,
-  miss   = 1,
-  hit    = 2
+  clear = 0,
+  selected = 1,
+  ship = 2,
+  miss   = 3,
+  hit    = 4,
 }

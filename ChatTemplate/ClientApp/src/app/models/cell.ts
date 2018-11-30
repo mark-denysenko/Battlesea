@@ -9,6 +9,6 @@ export class Cell {
   constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
-    this.status = CellStatus.closed;
+    this.status = CellStatus.clear;
   }
 }

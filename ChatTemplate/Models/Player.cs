@@ -9,6 +9,6 @@ namespace ChatTemplate.Models
     {
         public string Id { get; set; }
         public string Nickname { get; set; } = "Guest";
-        public int Score { get; set; } = 0;
+        public PlayerStatus status { get; set; } = PlayerStatus.none;
     }
 }

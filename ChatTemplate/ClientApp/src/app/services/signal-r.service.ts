@@ -16,11 +16,11 @@ export class SignalRService {
         .catch(err => console.log('Error while establishing connection GAME hub :('));
   }
 
-  public addListener(methodName: string, callback: () => void): void {
+  public addListener(methodName: string, callback: (data, any) => void): void {
   	this._hubConnection.on(methodName, callback);
   }
 
-  public invoke(methodName: string, data: any): any {
+  public invoke(methodName: string, data: any): Promise<any> {
   	if(this._hubConnection) {
   		return this._hubConnection.invoke(methodName, data);
   	}
