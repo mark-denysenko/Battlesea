@@ -4,6 +4,7 @@ import { SignalRService } from './signal-r.service';
 import { Player } from '../models/player';
 import { PlayerStatus } from '../models/player-status.enum';
 import { Battlefield } from '../models/battlefield';
+import { GameRoom } from '../models/gameroom';
 
 import { GameConfiguration } from '../models/game-configuration';
 
@@ -14,10 +15,6 @@ export class GameService {
   gameConfig: GameConfiguration = new GameConfiguration();
   
   private _player: Player;
-  private _battlefield: Battlefield;
-
-  private _opponent: Player;
-  private _opponentBattlefield: Battlefield;
 
   constructor(private _signalr: SignalRService) {
   	// --- init starting player, probably it better to congig in a consumer of service
@@ -53,5 +50,4 @@ export class GameService {
   setPlayer(player: Player): void {
   	this.player.next(player);
   }
-
 }

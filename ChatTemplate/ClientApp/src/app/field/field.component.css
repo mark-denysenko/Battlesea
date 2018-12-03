@@ -1,0 +1,28 @@
+table {
+	width: 600px;
+	height: 600px;
+}
+
+.cell-clear:hover {
+	background-color: yellow;
+} 
+
+.cell-clear {
+	background-color: grey;
+}
+
+.cell-selected {
+	background-color: green;
+}
+
+.cell-ship {
+	background-color: blue;
+}
+
+.cell-miss {
+	background-color: white;
+}
+
+.cell-hit {
+	background-color: red;
+}

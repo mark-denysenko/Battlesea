@@ -3,7 +3,7 @@ import { Battlefield } from './battlefield';
 
 export class GameRoom {
 	firstPlayer: Player;
-	firstBattledield: Battlefield;
+	firstBattlefield: Battlefield;
 
 	secondPlayer: Player;
 	secondBattlefield: Battlefield;

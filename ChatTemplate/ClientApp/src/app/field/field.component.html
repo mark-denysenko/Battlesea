@@ -1,0 +1,19 @@
+<table class="table-bordered text-center battle-field">
+	<tr>
+		<td>&nbsp;</td>
+		<td *ngFor="let row of field.cells; let i = index">{{ i }}</td>
+	</tr>
+	<tr *ngFor="let row of field.cells; let i = index">
+		<td>{{ i }}</td>
+		<td *ngFor="let cell of row"
+			(click)="onClickCell(cell)"
+		    [ngClass]="{ 
+		    	'cell-clear': cell.status == CellStatus.clear || (isOpponent && cell.status == CellStatus.ship),  
+		    	'cell-selected': cell.status == CellStatus.selected, 
+		    	'cell-ship': cell.status == CellStatus.ship && !isOpponent,
+		    	'cell-miss': cell.status == CellStatus.miss, 
+		    	'cell-hit': cell.status == CellStatus.hit
+		    }">&nbsp;
+		</td>
+	</tr>
+</table>

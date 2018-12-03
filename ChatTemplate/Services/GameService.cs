@@ -13,17 +13,10 @@ namespace ChatTemplate.Services
         private static ICollection<GameRoom> GameRooms = new List<GameRoom>();
         private static ICollection<Player> Players = new List<Player>();
 
-        static GameService()
-        {
-            GameRooms.Add(new GameRoom { RoomId = "11111" });
-            GameRooms.Add(new GameRoom { RoomId = "22222" });
-            GameRooms.Add(new GameRoom { RoomId = "33333" });
-        }
-
         public GameRoom CreateRoom(string seed)
         {
-            string roomId = DateTime.Now.ToLongTimeString() + "|"
-                + DateTime.Now.Millisecond + "|"
+            string roomId = DateTime.Now.ToLongTimeString()
+                + DateTime.Now.Millisecond
                 + seed;
 
             var room = new GameRoom() { RoomId = roomId };
@@ -48,6 +41,40 @@ namespace ChatTemplate.Services
             var player = new Player { Id = id, Nickname = nickname };
             Players.Add(player);
             return player;
+        }
+
+        public Player GetOpponent(string playerId)
+        {
+            GameRoom room = GetRoomByUserId(playerId);
+
+            if(room != null)
+            {
+                if (room.firstPlayer?.Id == playerId)
+                    return room.secondPlayer;
+                else
+                    return room.firstPlayer;
+            }
+
+            return null;
+        }
+
+        public void PlayerLeft(string playerId)
+        {
+            GameRoom room = GetRoomByUserId(playerId);
+
+            if(room != null)
+            {
+                if (room.firstPlayer?.Id == playerId)
+                {
+                    room.firstPlayer = null;
+                    room.firstBattlefield = null;
+                }
+                else
+                {
+                    room.secondPlayer = null;
+                    room.secondBattlefield = null;
+                }
+            }
         }
 
         public bool DeletePlayer(string id)
@@ -88,7 +115,7 @@ namespace ChatTemplate.Services
             GameRoom room = GetRoomByUserId(playerId);
             if (room.firstPlayer.Id == playerId)
             {
-                room.firstBattledield = battlefield;
+                room.firstBattlefield = battlefield;
                 room.firstPlayer.status = PlayerStatus.ready;
             }
             else if (room.secondPlayer.Id == playerId)
@@ -97,6 +124,28 @@ namespace ChatTemplate.Services
                 room.secondPlayer.status = PlayerStatus.ready;
             }
             return room;
+        }
+
+        public Shoot MakeShoot(Cell cell, string playerId)
+        {
+            GameRoom room = GetRoomByUserId(playerId);
+            Cell targetCell = cell;
+
+            if(room != null)
+            {
+                // one player shoot in another, so need take oposite battlefield
+                if(room.firstPlayer.Id == playerId)
+                    targetCell = room.secondBattlefield.Cells.ElementAt(cell.y).ElementAt(cell.x);
+                else
+                    targetCell = room.firstBattlefield.Cells.ElementAt(cell.y).ElementAt(cell.x);
+
+                if (targetCell.status == CellStatus.ship)
+                    targetCell.status = CellStatus.hit;
+                else
+                    targetCell.status = CellStatus.miss;
+            }
+
+            return new Shoot { Cell = targetCell, PlayerId = playerId };
         }
 
         public bool IsTwoPlayers(GameRoom room)

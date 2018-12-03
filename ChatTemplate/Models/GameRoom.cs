@@ -10,7 +10,7 @@ namespace ChatTemplate.Models
         public string RoomId { get; set; }
 
         public Player firstPlayer { get; set; }
-        public Battlefield firstBattledield { get; set; }
+        public Battlefield firstBattlefield { get; set; }
 
         public Player secondPlayer { get; set; }
         public Battlefield secondBattlefield { get; set; }

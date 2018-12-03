@@ -17,6 +17,7 @@ namespace ChatTemplate.Hubs
         private const string joinedToRoom = "joinedToRoom";
         private const string roomsUpdate = "roomsUpdate";
         private const string updatePlayer = "updatePlayer";
+
         private GameService _gameService { get; set; } = new GameService();
 
         public override Task OnConnectedAsync()
@@ -27,7 +28,11 @@ namespace ChatTemplate.Hubs
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            _gameService.DeletePlayer(Context.ConnectionId);
+            Player opponent = _gameService.GetOpponent(Context.ConnectionId);
+            if(opponent != null)
+                Clients.Client(opponent.Id).SendAsync("opponentDisconnect");
+
+            _gameService.PlayerLeft(Context.ConnectionId);
             return base.OnDisconnectedAsync(exception);
         }
 
@@ -82,7 +87,7 @@ namespace ChatTemplate.Hubs
             Battlefield battlefield = JsonConvert.DeserializeObject<Battlefield>(battlefieldJSON);
             GameRoom room = _gameService.UpdateBattlefield(battlefield, Context.ConnectionId);
             await UpdatePlayer();
-            if(room.firstBattledield != null && room.secondBattlefield != null)
+            if(room.firstBattlefield != null && room.secondBattlefield != null)
             {
                 await Clients.Client(room.firstPlayer.Id).SendAsync(startPlaying);
                 await Clients.Client(room.secondPlayer.Id).SendAsync(startPlaying);
@@ -99,8 +104,9 @@ namespace ChatTemplate.Hubs
             return _gameService.GetPlayerById(Context.ConnectionId);
         }
 
-        public GameRoom GetJoinedRoom()
+        public GameRoom GetJoinedRoom(string roomId)
         {
+            GameRoom room = _gameService.GetRoomByUserId(Context.ConnectionId);
             return _gameService.GetRoomByUserId(Context.ConnectionId);
         }
 
@@ -122,6 +128,15 @@ namespace ChatTemplate.Hubs
             }
             await UpdateClientsRooms();
             return player;
+        }
+
+        public async Task MakeShoot(Cell cell)
+        {
+            GameRoom room = _gameService.GetRoomByUserId(Context.ConnectionId);
+            Shoot shoot = _gameService.MakeShoot(cell, Context.ConnectionId);
+
+            await Clients.Client(room.firstPlayer.Id).SendAsync("playerShootCell", shoot);
+            await Clients.Client(room.secondPlayer.Id).SendAsync("playerShootCell", shoot);
         }
     }
 }

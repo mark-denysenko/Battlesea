@@ -15,6 +15,7 @@ import { BattleProccesComponent } from './battle-procces/battle-procces.componen
 import { PreparingComponent } from './preparing/preparing.component';
 import { GameService } from './services/game.service';
 import { EnumToKeyArrayPipe } from './enum-to-key-array.pipe';
+import { FieldComponent } from './field/field.component';
 
 const routes = [
   { path: '', component: BattleseaComponent, pathMatch: 'full' },
@@ -32,6 +33,7 @@ const routes = [
     BattleProccesComponent,
     PreparingComponent,
     EnumToKeyArrayPipe,
+    FieldComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

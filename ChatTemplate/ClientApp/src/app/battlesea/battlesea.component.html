@@ -28,6 +28,8 @@
 
 <div *ngIf="player.status == PlayerStatus.ready"><h2>Wait an opponent set up ships!</h2></div>
 
+<!-- <button class="btn btn-primary" (click)="testFlag = !testFlag">Load game proccess</button> -->
+<!-- player.status == PlayerStatus.playing  testFlag-->
 <app-battle-procces *ngIf="player.status == PlayerStatus.playing">Game proccess ...</app-battle-procces>
 
 <h1 class="text-center" *ngIf="player.status == PlayerStatus.disconnected">You were disconnected =(</h1>
