@@ -17,6 +17,7 @@ html, body {
 .input-zone-input {
   flex: 1;
   margin-right: 10px;
+  background-color: white;
 }
 
 .message-author {
@@ -30,4 +31,5 @@ html, body {
   min-height: 300px;
   overflow-y: auto;
   padding: 5px;
+  background-color: white;
 }

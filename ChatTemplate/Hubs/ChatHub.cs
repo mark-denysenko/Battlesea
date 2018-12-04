@@ -26,14 +26,14 @@ namespace ChatTemplate.Hubs
             await SendToAll("admin", "change name " + Users.FirstOrDefault(u => u.Id == Context.ConnectionId).Nickname);
         }
 
-        public async Task ClientMessage(string username, string message)
+        public async Task ClientMessage(string message)
         {
-            await Clients.Others.SendAsync("messageReceived", username, message);
+            await Clients.Others.SendAsync("messageReceived", message);
         }
 
         public async Task SendToAll(string name, string message)
         {
-            await Clients.All.SendAsync("messageReceived", name, message);
+            await Clients.All.SendAsync("messageReceived", name + " : " + message);
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
@@ -44,8 +44,6 @@ namespace ChatTemplate.Hubs
                 SendToAll("admin", "left " + Context.ConnectionId);
                 Users.Remove(user);
             }
-
-            Clients.Caller.SendAsync("disconnect");
 
             return base.OnDisconnectedAsync(exception);
         }

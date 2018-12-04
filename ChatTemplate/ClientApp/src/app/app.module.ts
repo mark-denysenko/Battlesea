@@ -16,6 +16,7 @@ import { PreparingComponent } from './preparing/preparing.component';
 import { GameService } from './services/game.service';
 import { EnumToKeyArrayPipe } from './enum-to-key-array.pipe';
 import { FieldComponent } from './field/field.component';
+import { ChatService } from './services/chat.service';
 
 const routes = [
   { path: '', component: BattleseaComponent, pathMatch: 'full' },
@@ -41,7 +42,7 @@ const routes = [
     FormsModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [SignalRService, RoomService, GameService],
+  providers: [SignalRService, RoomService, GameService, ChatService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

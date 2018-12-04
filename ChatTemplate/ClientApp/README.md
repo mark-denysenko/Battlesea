@@ -19,13 +19,23 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
 
-Configure Hub, Angular, ASP.NET Core in RT - 20h
+Configure Hub, Angular, ASP.NET Core in RT - 16h
+
 Rooms - 7h
+
 Joining Room - 1h
+
 Nicknames - 1h
+
 Subject<Player> - 3h
+
 Battlefield - 16h
+
 Back-end (api, hub func) - 10 h
+
+game proccess (shoot< step track and final result) - 8h
+
+chat and logs to it - 2h
 
 Markup and styles - 5h
 

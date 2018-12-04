@@ -138,5 +138,29 @@ namespace ChatTemplate.Hubs
             await Clients.Client(room.firstPlayer.Id).SendAsync("playerShootCell", shoot);
             await Clients.Client(room.secondPlayer.Id).SendAsync("playerShootCell", shoot);
         }
+
+        #region Chat
+
+        public void SendMessageToAll(string message)
+        {
+            string senderNickname = _gameService.GetPlayerById(Context.ConnectionId).Nickname;
+            Clients.All.SendAsync("messageReceived", CreateMessage(senderNickname, message));
+        }
+
+        //public void SystemMessage(string message, string connId)
+        //{
+        //    Clients.Client(connId).SendAsync("messageReceived", "!> SYSTEM: " + message);
+        //}
+
+        public void SystemMessage(string message)
+        {
+            Clients.Client(Context.ConnectionId).SendAsync("messageReceived", "!> SYSTEM: " + message);
+        }
+
+        private string CreateMessage(string nick, string message)
+        {
+            return $"> {nick} : {message}";
+        }
+        #endregion
     }
 }

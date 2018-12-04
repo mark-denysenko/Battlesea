@@ -10,7 +10,7 @@ import { RoomService } from '../services/room.service';
 })
 export class RoomsComponent implements OnInit {
 
-  constructor(private roomService: RoomService) { }
+  constructor(public roomService: RoomService) { }
 
   ngOnInit() {
   }

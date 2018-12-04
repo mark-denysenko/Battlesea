@@ -3,6 +3,8 @@ import { Observable } from 'rxjs';
 import { Player } from '../models/player';
 import { CellStatus } from '../models/cell-status.enum';
 import { Cell } from '../models/cell';
+import { ShipType } from '../models/ship-type';
+import { Ship } from '../models/ship';
 import { Shoot } from '../models/shoot';
 import { Battlefield }  from '../models/battlefield';
 import { GameRoom } from '../models/gameroom';
@@ -16,6 +18,7 @@ import { GameConfiguration } from '../models/game-configuration';
   styleUrls: ['./battle-procces.component.css']
 })
 export class BattleProccesComponent implements OnInit {
+  ShipType: typeof ShipType = ShipType;
   CellStatus : typeof CellStatus = CellStatus;
   // shoots: Observable<Shoot> = new Observable<Shoot>();
   shoots: Shoot[] = [];
@@ -52,13 +55,15 @@ export class BattleProccesComponent implements OnInit {
   			this.opponentBattlefield = gameRoom.secondBattlefield;
   			this.opponent = gameRoom.secondPlayer;
 
-  			this.isYourStep = true;	
+  			this.isYourStep = true;
+  			this.sendSystemMessage('Game is ready! You have the first step!');
   		} else {
   			this.yourBattlefield = gameRoom.secondBattlefield;
   			this.opponentBattlefield = gameRoom.firstBattlefield;
   			this.opponent = gameRoom.firstPlayer;
 
   			this.isYourStep = false;
+  			this.sendSystemMessage('Game is ready! You have the second step!');
   		}
   		this.currentRoom = gameRoom;
   	});
@@ -73,11 +78,15 @@ export class BattleProccesComponent implements OnInit {
 
   getShootCell(shoot: Shoot): void {
   	if(shoot.playerId == this.you.id) {
+  		this.sendSystemMessage('Shoot in opponent (' + shoot.cell.x + ',' + shoot.cell.y + ')');
   		this.opponentBattlefield.cells[shoot.cell.y][shoot.cell.x] = shoot.cell;
   		this.updateShips(this.opponentBattlefield);
+  		this.updateShip(shoot.cell, this.opponentBattlefield);
   	} else {
+  		this.sendSystemMessage('opponent shoot in (' + shoot.cell.x + ',' + shoot.cell.y + ')');
   		this.yourBattlefield.cells[shoot.cell.y][shoot.cell.x] = shoot.cell;
   		this.updateShips(this.yourBattlefield);
+  		this.updateShip(shoot.cell, this.yourBattlefield);
   	}
 
   	if(shoot.cell.status == CellStatus.hit && this.you.id == shoot.playerId)
@@ -88,6 +97,21 @@ export class BattleProccesComponent implements OnInit {
   		this.isYourStep = false;
 
   	this.checkForEnd();
+  }
+
+  private checkShipIsDrowned(ship: Ship) {
+  	let hits = ship.coordinates.filter(c => c.status == CellStatus.hit).length;
+  	if(ship.isDead || hits == ship.size){
+  		this.sendSystemMessage('Ship was drowned ' + ShipType[ship.type]);
+  		//console.log('Ship was drowned ', ship);
+  	}
+  }
+
+  private updateShip(cell: Cell, battlefield: Battlefield): void {
+  	let ship: Ship = battlefield.ships.find(ship => ship.coordinates.find(c => c.x == cell.x && c.y == cell.y) != null);
+
+  	if(ship != null)
+  		this.checkShipIsDrowned(ship);
   }
 
   private updateShips(battlefield: Battlefield): void {
@@ -118,5 +142,10 @@ export class BattleProccesComponent implements OnInit {
   	} else {
   		return false;
   	}
+  }
+
+  // chat log
+  private sendSystemMessage(message: string): void {
+  	this._signalr.invoke('systemMessage', message);
   }
 }

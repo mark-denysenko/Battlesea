@@ -1,13 +1,12 @@
-<span>Your nickname: </span>
-<input type="text" [(ngModel)]="nick">
-<button (click)="saveName()">Save</button>
-<div id="divMessages" class="messages">
-	<p *ngFor="let m of messages">
-		{{ m }}
-	</p>
-</div>
-<div class="input-zone">
-  <label>Message:</label>
-  <input class="input-zone-input" type="text" [(ngModel)]="message" />
-  <button (click)="sendMessage()">Send</button>
+<div class="chat">
+	<div id="divMessages" class="messages">
+		<p *ngFor="let m of messages">
+			{{ m }}
+		</p>
+	</div>
+	<div class="input-zone">
+	  <label>Message:</label>
+	  <input class="input-zone-input" type="text" [(ngModel)]="message" />
+	  <button (click)="sendMessage()">Send</button>
+	</div>
 </div>
