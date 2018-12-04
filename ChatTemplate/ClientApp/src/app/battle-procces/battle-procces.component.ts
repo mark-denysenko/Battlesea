@@ -21,17 +21,17 @@ export class BattleProccesComponent implements OnInit {
   ShipType: typeof ShipType = ShipType;
   CellStatus : typeof CellStatus = CellStatus;
 
-  you: Player;
-  yourBattlefield: Battlefield = new Battlefield(new GameConfiguration().FIELD_SIZE);
+  public you: Player;
+  public yourBattlefield: Battlefield = new Battlefield(new GameConfiguration().FIELD_SIZE);
 
-  opponent: Player = new Player();
-  opponentBattlefield: Battlefield = new Battlefield(new GameConfiguration().FIELD_SIZE);
+  public opponent: Player = new Player();
+  public opponentBattlefield: Battlefield = new Battlefield(new GameConfiguration().FIELD_SIZE);
 
-  isYourStep: boolean = false;
-  gameEnd: boolean = false;
-  areYouWinner: boolean;
+  public isYourStep: boolean = false;
+  public gameEnd: boolean = false;
+  public areYouWinner: boolean;
 
-  centralMessage: string = 'VS';
+  public centralMessage: string = 'VS';
 
   constructor(private _gameService: GameService, private _signalr: SignalRService) {
     this.loadGameRoom();
@@ -70,7 +70,7 @@ export class BattleProccesComponent implements OnInit {
       && cell.status != CellStatus.hit 
       && cell.status != CellStatus.miss) {
 
-  		this.isYourStep = false;
+  		this.isYourStep = undefined;
   		this._signalr.invoke('makeShoot', cell);
   	}
   }
@@ -124,22 +124,18 @@ export class BattleProccesComponent implements OnInit {
   	});
   }
 
-  private checkForEnd(): boolean {
+  private checkForEnd(): void {
   	if(this.yourBattlefield.ships.length == this.yourBattlefield.ships.filter(s => s.isDead).length) {
   		// opponent win
   		this.gameEnd = true;
   		this.areYouWinner = false;
   		this.centralMessage = 'Game Over! sorry';
-  		return true;
   	} else if (this.opponentBattlefield.ships.length == this.opponentBattlefield.ships.filter(s => s.isDead).length) {
   		// you win
   		this.gameEnd = true;
   		this.areYouWinner = true;
   		this.centralMessage = 'Congratulation! You won!';
-  		return true;
-  	} else {
-  		return false;
-  	}
+    }
   }
 
   // chat log

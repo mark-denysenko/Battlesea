@@ -1,6 +1,7 @@
 import { Cell } from './cell';
 
 export class Shoot {
-  playerId: string;
-  cell: Cell;
+	
+  public playerId: string;
+  public cell: Cell;
 }

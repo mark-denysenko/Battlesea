@@ -5,9 +5,9 @@ import { SignalRService } from '../services/signal-r.service';
 
 @Injectable()
 export class RoomService {
-  rooms: GameRoom[];
-  requestUrl: string;
-  joinedRoom: GameRoom;
+  public rooms: GameRoom[];
+  public requestUrl: string;
+  public joinedRoom: GameRoom;
 
   constructor(private signalrService: SignalRService, private http: HttpClient, @Inject('BASE_URL') _baseUrl: string) {
   	this.requestUrl = _baseUrl + 'api/Game/';

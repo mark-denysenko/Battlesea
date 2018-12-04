@@ -4,8 +4,8 @@ import { Ship } from './ship';
 
 export class Battlefield {
 
-	cells: Cell[][] = [];
-	ships: Ship[] = [];
+	public cells: Cell[][] = [];
+	public ships: Ship[] = [];
 
 	constructor(fieldSize: number) {
         for(let i: number = 0; i < fieldSize; i++) {

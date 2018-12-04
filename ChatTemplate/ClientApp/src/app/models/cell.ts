@@ -2,9 +2,9 @@ import { CellStatus } from './cell-status.enum';
 
 export class Cell {
 
-  x: number;
-  y: number;
-  status: CellStatus;
+  public x: number;
+  public y: number;
+  public status: CellStatus;
 
   constructor(x: number, y: number) {
     this.x = x;

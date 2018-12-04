@@ -10,7 +10,7 @@
 			Joined!
 		</button>
 		<button (click)="roomService.joinRoom(r.roomId)" 
-				class="btn btn-info" 
+				class="btn btn-info pull-left" 
 				*ngIf="!roomService.joinedRoom && (!r.firstPlayer || !r.secondPlayer)">
 			Join
 		</button>

@@ -9,8 +9,8 @@ import { SignalRService } from '../services/signal-r.service';
 })
 export class ChatComponent implements OnInit {
 
-  message: string = '';
-  messages: string[] = [];
+  public message: string = '';
+  public messages: string[] = [];
 
   constructor(private _chatService: SignalRService) {
     _chatService.addListener('messageReceived', message => { this.messages.push(message); setTimeout(() => this.scrollMessageToBottom(), 0)});
@@ -22,6 +22,9 @@ export class ChatComponent implements OnInit {
   public sendMessage(): void {
     if(this.message.trim() != '')
       this._chatService.invoke('sendMessageToAll', this.message);
+
+    var messageHolder = document.getElementById('messageHolder');
+    messageHolder.focus();
     this.message = '';
   }
 

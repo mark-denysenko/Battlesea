@@ -2,11 +2,11 @@ import { Player } from './player';
 import { Battlefield } from './battlefield';
 
 export class GameRoom {
-	firstPlayer: Player;
-	firstBattlefield: Battlefield;
+	public roomId: string;
 
-	secondPlayer: Player;
-	secondBattlefield: Battlefield;
+	public firstPlayer: Player;
+	public firstBattlefield: Battlefield;
 
-	roomId: string;
+	public secondPlayer: Player;
+	public secondBattlefield: Battlefield;
 }

@@ -11,15 +11,13 @@ import { GameConfiguration } from '../models/game-configuration';
 @Injectable()
 export class GameService {
 
-  player: Subject<Player> = new BehaviorSubject<Player>(new Player());
-  gameConfig: GameConfiguration = new GameConfiguration();
+  public player: Subject<Player> = new BehaviorSubject<Player>(new Player());
   
   private _player: Player;
 
   constructor(private _signalr: SignalRService) {
   	this.player.subscribe(player => this._player = player);
-    _signalr.addListener('updatePlayer', (player) => player ? this.player.next(player)
-                                                            : console.log('Player update null!'));
+    _signalr.addListener('updatePlayer', (player) => player ? this.player.next(player) : null);
   	_signalr.addListener('joinedToRoom', () => { this._player.status = PlayerStatus.joined; this.setPlayer(this._player);});
     _signalr.addListener('preparing', () => { this._player.status = PlayerStatus.preparing; this.setPlayer(this._player);});
     _signalr.addListener('readyToBattle', () => { this._player.status = PlayerStatus.ready; this.setPlayer(this._player);});
@@ -27,12 +25,9 @@ export class GameService {
   }
 
   setNickname(nickname: string): void {
-  	this._player.nickname = nickname;
   	this._signalr
   		.invoke('savePlayerNickname', nickname)
-  		.then(player => player 
-					? this.player.next(player) 
-					: console.log('setNickname error! result: ', player));
+  		.then(player => player ? this.player.next(player) : null);
   }
 
   updatePlayer(): void {

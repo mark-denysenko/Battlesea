@@ -15,7 +15,7 @@ import { SignalRService } from '../services/signal-r.service';
 export class PreparingComponent implements OnInit {
   CellStatus : typeof CellStatus = CellStatus;
   ShipType: typeof ShipType = ShipType;
-  // invoke after making battlefield and pass it to server
+
   @Output() readyFunction: EventEmitter<Battlefield> = new EventEmitter();
 
   battlefield: Battlefield;
@@ -36,7 +36,7 @@ export class PreparingComponent implements OnInit {
   	if(cell.status == CellStatus.clear) {
   	  let newSelectedCells: Cell[] = this.selectedCells.slice();
   	  newSelectedCells.push(cell);
-  	  if((this.inCol(newSelectedCells) || this.inRow(newSelectedCells))) {
+  	  if((this.isCellInColumn(newSelectedCells) || this.isCellInRow(newSelectedCells))) {
 	      cell.status = CellStatus.selected;
 	  	  this.selectedCells.push(cell);
 	   }
@@ -69,10 +69,10 @@ export class PreparingComponent implements OnInit {
   	}
   }
 
-  createShip(): boolean {
+  createShip(): void {
   	if(this.getCurrentNumberOfShipsByType(this.selectedType) >= this.getMaxNumberOfShipType(this.selectedType)) {
   		this.sendErrorMessage('You created max number ships of this type!');
-  		return false;
+  		return;
   	}
 
   	let points = this.selectedCells;
@@ -82,10 +82,8 @@ export class PreparingComponent implements OnInit {
   		}
   		this.battlefield.ships.push(new Ship(points, this.selectedType));
   		this.selectedCells = [];
-  		return true;
   	} else {
   		this.sendErrorMessage('Cannot create');
-  		return false;
   	}
   }
 
@@ -93,14 +91,13 @@ export class PreparingComponent implements OnInit {
   	return this.getMaxNumberAllShips() == this.battlefield.ships.length;
   }
 
-  // emit value to Output
   readyToBattle(): void {
   	if(this.isAllShipsSet()) {
   		this.readyFunction.emit(this.battlefield);
   	}
   }
 
-  private inRow(points: Cell[]): boolean {
+  private isCellInRow(points: Cell[]): boolean {
   	let flag: boolean = true;
   	points.sort((a, b) => a.x - b.x);
   	for(let i = 1; i < points.length; i++) {
@@ -110,7 +107,7 @@ export class PreparingComponent implements OnInit {
   	return flag;
   }
 
-  private inCol(points: Cell[]): boolean {
+  private isCellInColumn(points: Cell[]): boolean {
   	let flag: boolean = true;
   	points.sort((a, b) => a.y - b.y);
   	for(let i = 1; i < points.length; i++) {

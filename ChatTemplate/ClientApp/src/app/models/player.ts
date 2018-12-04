@@ -1,7 +1,7 @@
 import { PlayerStatus } from './player-status.enum';
 
 export class Player {
-	id: string;
-	nickname: string = 'Guest';
-	status: PlayerStatus = PlayerStatus.none;
+	public id: string;
+	public nickname: string = 'Guest';
+	public status: PlayerStatus = PlayerStatus.none;
 }
