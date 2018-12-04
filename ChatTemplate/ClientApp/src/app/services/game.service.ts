@@ -17,9 +17,6 @@ export class GameService {
   private _player: Player;
 
   constructor(private _signalr: SignalRService) {
-  	// --- init starting player, probably it better to congig in a consumer of service
-  	//_signalr.getConnectionId().then(id => this._player.id = id); // impossible, not connected at this momemnt
-
   	this.player.subscribe(player => this._player = player);
     _signalr.addListener('updatePlayer', (player) => player ? this.player.next(player)
                                                             : console.log('Player update null!'));
@@ -27,7 +24,6 @@ export class GameService {
     _signalr.addListener('preparing', () => { this._player.status = PlayerStatus.preparing; this.setPlayer(this._player);});
     _signalr.addListener('readyToBattle', () => { this._player.status = PlayerStatus.ready; this.setPlayer(this._player);});
     _signalr.addListener('startPlaying', () => { this._player.status = PlayerStatus.playing; this.setPlayer(this._player);});
-    // on disconnect server invoke onDisconnected() and change player status
   }
 
   setNickname(nickname: string): void {

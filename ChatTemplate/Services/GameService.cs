@@ -129,23 +129,17 @@ namespace ChatTemplate.Services
         public Shoot MakeShoot(Cell cell, string playerId)
         {
             GameRoom room = GetRoomByUserId(playerId);
-            Cell targetCell = cell;
 
             if(room != null)
             {
-                // one player shoot in another, so need take oposite battlefield
-                if(room.firstPlayer.Id == playerId)
-                    targetCell = room.secondBattlefield.Cells.ElementAt(cell.y).ElementAt(cell.x);
-                else
-                    targetCell = room.firstBattlefield.Cells.ElementAt(cell.y).ElementAt(cell.x);
+                cell = room.firstPlayer.Id == playerId
+                    ? room.secondBattlefield.Cells.ElementAt(cell.y).ElementAt(cell.x)
+                    : room.firstBattlefield.Cells.ElementAt(cell.y).ElementAt(cell.x);
 
-                if (targetCell.status == CellStatus.ship)
-                    targetCell.status = CellStatus.hit;
-                else
-                    targetCell.status = CellStatus.miss;
+                cell.status = cell.status == CellStatus.ship ? CellStatus.hit : CellStatus.miss;
             }
 
-            return new Shoot { Cell = targetCell, PlayerId = playerId };
+            return new Shoot { Cell = cell, PlayerId = playerId };
         }
 
         public bool IsTwoPlayers(GameRoom room)

@@ -16,7 +16,7 @@ export class PreparingComponent implements OnInit {
   CellStatus : typeof CellStatus = CellStatus;
   ShipType: typeof ShipType = ShipType;
   // invoke after making battlefield and pass it to server
-  @Output() readyFunction: EventEmitter<Battlefield> = new EventEmitter();;
+  @Output() readyFunction: EventEmitter<Battlefield> = new EventEmitter();
 
   battlefield: Battlefield;
   gameConfiguration: GameConfiguration = new GameConfiguration();
@@ -36,7 +36,7 @@ export class PreparingComponent implements OnInit {
   	if(cell.status == CellStatus.clear) {
   	  let newSelectedCells: Cell[] = this.selectedCells.slice();
   	  newSelectedCells.push(cell);
-  	  if((this.inCol(newSelectedCells) || this.inRow(newSelectedCells))) { //&& this.isAlone(newSelectedCells)) {
+  	  if((this.inCol(newSelectedCells) || this.inRow(newSelectedCells))) {
 	      cell.status = CellStatus.selected;
 	  	  this.selectedCells.push(cell);
 	   }
@@ -52,21 +52,19 @@ export class PreparingComponent implements OnInit {
   }
 
   selectType(type): void {
-  	// it doesnt work, so ... time to govnocode
-  	//this.selectedType = ShipType[type];
   	switch (type) {
   		case 'destroyer':
-  			this.selectedType = ShipType.destroyer
+  			this.selectedType = ShipType.destroyer;
   			break;
   		case 'cruiser':
-  			this.selectedType = ShipType.cruiser
+  			this.selectedType = ShipType.cruiser;
   			break;
   		case 'battleship':
-  			this.selectedType = ShipType.battleship
+  			this.selectedType = ShipType.battleship;
   			break;
   		case 'submarine':
   		default:
-  			this.selectedType = ShipType.submarine
+  			this.selectedType = ShipType.submarine;
   			break;
   	}
   }
@@ -95,9 +93,9 @@ export class PreparingComponent implements OnInit {
   	return this.getMaxNumberAllShips() == this.battlefield.ships.length;
   }
 
+  // emit value to Output
   readyToBattle(): void {
   	if(this.isAllShipsSet()) {
-  		// call function from @Input
   		this.readyFunction.emit(this.battlefield);
   	}
   }
@@ -121,31 +119,6 @@ export class PreparingComponent implements OnInit {
   	}
   	return flag;
   }
-
-  // private isAlone(points: Cell[]): boolean {
-  // 	let flag: boolean = true;
-  // 	for(let i = 0; i < points.length; i++) {
-  // 		if(this.checkAroundCellForType(points[i], CellStatus.ship)) {
-  // 			this.errorMessage = 'You set ship near another!';
-  // 			flag = false;
-  // 		}
-  // 	}
-  // 	return flag;
-  // }
-
-  // private checkAroundCellForType(cell: Cell, type): boolean {
-  // 	let flag: boolean = false;
-  // 	if(    this.battlefield.cells[cell.y + 1][cell.x + 1].status == type
-  // 		|| this.battlefield.cells[cell.y + 1][cell.x].status == type
-  // 		|| this.battlefield.cells[cell.y][cell.x + 1].status == type
-  // 		|| this.battlefield.cells[cell.y - 1][cell.x - 1].status == type
-  // 		|| this.battlefield.cells[cell.y - 1][cell.x].status == type
-  // 		|| this.battlefield.cells[cell.y][cell.x - 1].status == type
-  // 		|| this.battlefield.cells[cell.y + 1][cell.x - 1].status == type
-  // 		|| this.battlefield.cells[cell.y - 1][cell.x + 1].status == type)
-  // 		flag = true;
-  // 	return flag;
-  // }
 
   private sendErrorMessage(message: string): void {
   	this.errorMessage = message;

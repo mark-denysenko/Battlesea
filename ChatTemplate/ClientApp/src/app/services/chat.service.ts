@@ -14,11 +14,8 @@ export class ChatService {
   	this._hubConnection = new HubConnectionBuilder()
   								.withUrl('/userchat')
   								.build();
-  	this._hubConnection
-  		.start()
-        .then(() => console.log('Connection Chat hub started!'))
-        .catch(err => console.log('Error while establishing connection Chat hub :('));
 
+  	this._hubConnection.start();
     this._hubConnection.on('messageReceived', (message: string) => this.messages.next(message));
   }
 
@@ -31,11 +28,8 @@ export class ChatService {
   }
 
   public invoke(methodName: string, data: any): Promise<any> {
-  	if(this._hubConnection) {
+  	if(this._hubConnection)
   		return this._hubConnection.invoke(methodName, data);
-  	}
-
-  	console.log('No connection to GAME (from service)');
   	return null;
   }
 

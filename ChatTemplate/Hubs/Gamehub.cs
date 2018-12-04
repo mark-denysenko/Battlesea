@@ -11,12 +11,14 @@ namespace ChatTemplate.Hubs
 {
     public class GameHub: Hub
     {
-        private const string startPlaying = "startPlaying";
-        private const string readyToBattle = "readyToBattle";
-        private const string preparing = "preparing";
-        private const string joinedToRoom = "joinedToRoom";
-        private const string roomsUpdate = "roomsUpdate";
-        private const string updatePlayer = "updatePlayer";
+        #region Player events
+        private const string START_PLAYING = "startPlaying";
+        private const string READY_TO_BATTLE = "readyToBattle";
+        private const string PREPARING = "preparing";
+        private const string JOINED_TO_ROOM = "joinedToRoom";
+        private const string ROOMS_UPDATE = "roomsUpdate";
+        private const string UPDATE_PLAYER = "updatePlayer";
+        #endregion
 
         private GameService _gameService { get; set; } = new GameService();
 
@@ -48,15 +50,18 @@ namespace ChatTemplate.Hubs
             await UpdateClientsRooms();
         }
 
-        public bool JoinRoom(string roomId)
+        public async Task<bool> JoinRoom(string roomId)
         {
             GameRoom room = _gameService.JoinRoom(roomId, Context.ConnectionId);
             if (room != null)
             {
-                Clients.Caller.SendAsync(joinedToRoom);
-                UpdateClientsRooms();
+                Clients.Caller.SendAsync(JOINED_TO_ROOM);
+                await UpdateClientsRooms();
                 if(_gameService.IsTwoPlayers(room))
-                    InvokeReadyToPreparing(room);
+                {
+                    await Clients.Client(room.firstPlayer.Id).SendAsync(PREPARING);
+                    await Clients.Client(room.secondPlayer.Id).SendAsync(PREPARING);
+                }
                 return true;
             }
             return false;
@@ -68,35 +73,29 @@ namespace ChatTemplate.Hubs
             await UpdateClientsRooms();
         }
 
-        public async Task InvokeReadyToPreparing(GameRoom room)
-        {
-            await Clients.Client(room.firstPlayer.Id).SendAsync(preparing);
-            await Clients.Client(room.secondPlayer.Id).SendAsync(preparing);
-        }
-
         public async Task UpdatePlayer(string connId = null)
         {
             if (connId == null)
                 connId = Context.ConnectionId;
 
-            await Clients.Client(connId).SendAsync(updatePlayer, _gameService.GetPlayerById(connId));
+            await Clients.Client(connId).SendAsync(UPDATE_PLAYER, _gameService.GetPlayerById(connId));
         }
 
-        public async Task UpdateBattlefield(string battlefieldJSON)
+        public async Task UpdateBattlefield(string battlefieldJson)
         {
-            Battlefield battlefield = JsonConvert.DeserializeObject<Battlefield>(battlefieldJSON);
+            var battlefield = JsonConvert.DeserializeObject<Battlefield>(battlefieldJson);
             GameRoom room = _gameService.UpdateBattlefield(battlefield, Context.ConnectionId);
             await UpdatePlayer();
             if(room.firstBattlefield != null && room.secondBattlefield != null)
             {
-                await Clients.Client(room.firstPlayer.Id).SendAsync(startPlaying);
-                await Clients.Client(room.secondPlayer.Id).SendAsync(startPlaying);
+                await Clients.Client(room.firstPlayer.Id).SendAsync(START_PLAYING);
+                await Clients.Client(room.secondPlayer.Id).SendAsync(START_PLAYING);
             }
         }
 
         public async Task UpdateClientsRooms()
         {
-            await Clients.All.SendAsync(roomsUpdate, _gameService.GetAllRooms());
+            await Clients.All.SendAsync(ROOMS_UPDATE, _gameService.GetAllRooms());
         }
 
         public Player GetPlayer()
@@ -146,11 +145,6 @@ namespace ChatTemplate.Hubs
             string senderNickname = _gameService.GetPlayerById(Context.ConnectionId).Nickname;
             Clients.All.SendAsync("messageReceived", CreateMessage(senderNickname, message));
         }
-
-        //public void SystemMessage(string message, string connId)
-        //{
-        //    Clients.Client(connId).SendAsync("messageReceived", "!> SYSTEM: " + message);
-        //}
 
         public void SystemMessage(string message)
         {

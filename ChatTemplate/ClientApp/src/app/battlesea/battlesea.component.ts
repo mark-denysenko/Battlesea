@@ -18,7 +18,6 @@ export class BattleseaComponent implements OnInit {
   PlayerStatus : typeof PlayerStatus = PlayerStatus;
 
   public player: Player;
-  // testFlag: boolean = false;
 
   constructor(private gameService: GameService) {
     gameService.player.subscribe(player => this.player = player);

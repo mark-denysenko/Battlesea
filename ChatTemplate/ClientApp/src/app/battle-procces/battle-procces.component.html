@@ -7,7 +7,8 @@
 	<div class="row text-center" height="50">
 		<div class="col-12">
 			<h2 [ngClass]="{'bg-primary': isYourStep }">{{ you.nickname }}</h2>
-			<h3 [ngClass]="{'text-success': areYouWinner && gameEnd, 'text-danger': !areYouWinner && gameEnd}">
+			<h3 [ngClass]="{'text-success': areYouWinner && gameEnd, 
+							'text-danger': !areYouWinner && gameEnd}">
 				{{ centralMessage }}
 			</h3>
 			<h2 [ngClass]="{'bg-primary': !isYourStep }">{{ opponent.nickname }}</h2>

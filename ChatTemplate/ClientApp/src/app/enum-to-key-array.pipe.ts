@@ -9,5 +9,4 @@ export class EnumToKeyArrayPipe implements PipeTransform {
     const keys = Object.keys(value);
     return keys.slice(keys.length / 2);
   }
-
 }

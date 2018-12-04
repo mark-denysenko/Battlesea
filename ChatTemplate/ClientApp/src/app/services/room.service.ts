@@ -13,9 +13,6 @@ export class RoomService {
   	this.requestUrl = _baseUrl + 'api/Game/';
 
   	this.signalrService.addListener("roomsUpdate", (rooms: GameRoom[]) => this.rooms = rooms);
-      // this.http.get<GameRoom[]>(this.requestUrl + 'GetAllRooms').subscribe(result => {
-      // this.rooms = result;
-      // }, error => console.error(error)));
   	this.updateRooms();
   }
 
@@ -42,10 +39,4 @@ export class RoomService {
       this.rooms = result;
       }, error => console.error(error));
   }
-
-    // public getRoom(roomId): GameRoom {
-  // 	this.http.get<GameRoom>(this.requestUrl + '/' + roomId).subscribe(result => this.joinedRoom = result);
-  // 	console.log('getting room: ', this.joinedRoom);
-  // 	return room;
-  // }
 }

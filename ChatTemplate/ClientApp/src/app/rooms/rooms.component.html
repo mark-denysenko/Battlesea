@@ -5,13 +5,18 @@
 		<p>Room: <b>{{ r.roomId }}</b></p>
 		<button (click)="roomService.deleteRoom(r.roomId)" class="btn btn-danger pull-right">Delete Room</button>
 
-		<button class="btn btn-success" *ngIf="currentRoom && r.roomId == currentRoom.roomId">
+		<button class="btn btn-success" 
+				*ngIf="currentRoom && r.roomId == currentRoom.roomId">
 			Joined!
 		</button>
-		<button (click)="roomService.joinRoom(r.roomId)" class="btn btn-info" *ngIf="!roomService.joinedRoom && (!r.firstPlayer || !r.secondPlayer)">
+		<button (click)="roomService.joinRoom(r.roomId)" 
+				class="btn btn-info" 
+				*ngIf="!roomService.joinedRoom && (!r.firstPlayer || !r.secondPlayer)">
 			Join
 		</button>
-		<button (click)="roomService.exitRoom(r.roomId)" class="btn btn-dark" *ngIf="roomService.joinedRoom && roomService.joinedRoom.roomId == r.roomId">
+		<button (click)="roomService.exitRoom(r.roomId)" 
+				class="btn btn-dark" 
+				*ngIf="roomService.joinedRoom && roomService.joinedRoom.roomId == r.roomId">
 			Exit
 		</button>
 		<p class="text-center">

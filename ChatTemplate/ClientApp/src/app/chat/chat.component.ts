@@ -13,18 +13,20 @@ export class ChatComponent implements OnInit {
   messages: string[] = [];
 
   constructor(private _chatService: SignalRService) {
-    _chatService.addListener('messageReceived', message => this.messages.push(message));
+    _chatService.addListener('messageReceived', message => { this.messages.push(message); setTimeout(() => this.scrollMessageToBottom(), 0)});
   }
 
   ngOnInit() {
   }
 
   public sendMessage(): void {
-    this._chatService.invoke('sendMessageToAll', this.message);
+    if(this.message.trim() != '')
+      this._chatService.invoke('sendMessageToAll', this.message);
     this.message = '';
   }
 
-  // private createMessage(nickname: string, message: string): string {
-  //   return nickname + ' : ' + message;
-  // }
+  public scrollMessageToBottom(): void {
+    var obj = document.getElementById('divMessages');
+    obj.scrollTop = obj.scrollHeight;
+  }
 }

@@ -20,8 +20,6 @@ import { GameConfiguration } from '../models/game-configuration';
 export class BattleProccesComponent implements OnInit {
   ShipType: typeof ShipType = ShipType;
   CellStatus : typeof CellStatus = CellStatus;
-  // shoots: Observable<Shoot> = new Observable<Shoot>();
-  shoots: Shoot[] = [];
 
   you: Player;
   yourBattlefield: Battlefield = new Battlefield(new GameConfiguration().FIELD_SIZE);
@@ -33,15 +31,13 @@ export class BattleProccesComponent implements OnInit {
   gameEnd: boolean = false;
   areYouWinner: boolean;
 
-  stepTime: number = new GameConfiguration().STEP_TIME;
   centralMessage: string = 'VS';
-  currentRoom: GameRoom;
 
   constructor(private _gameService: GameService, private _signalr: SignalRService) {
+    this.loadGameRoom();
   	_gameService.player.subscribe(player => this.you = player);
-  	this.loadGameRoom();
-  	this._signalr.addListener('playerShootCell', (shoot: Shoot) => this.getShootCell(shoot));
-  	this._signalr.addListener('opponentDisconnect', () => { this.gameEnd = true; this.areYouWinner = true; this.centralMessage = 'Your opponent left the game!'; });
+  	_signalr.addListener('playerShootCell', (shoot: Shoot) => this.getShootCell(shoot));
+  	_signalr.addListener('opponentDisconnect', () => { this.gameEnd = true; this.areYouWinner = true; this.centralMessage = 'Your opponent left the game!'; });
   }
 
   ngOnInit() {
@@ -65,12 +61,15 @@ export class BattleProccesComponent implements OnInit {
   			this.isYourStep = false;
   			this.sendSystemMessage('Game is ready! You have the second step!');
   		}
-  		this.currentRoom = gameRoom;
   	});
   }
 
   makeShootCell(cell: Cell): void {
-  	if(!this.gameEnd && this.isYourStep && cell.status != CellStatus.hit && cell.status != CellStatus.miss) {
+  	if(!this.gameEnd 
+      && this.isYourStep 
+      && cell.status != CellStatus.hit 
+      && cell.status != CellStatus.miss) {
+
   		this.isYourStep = false;
   		this._signalr.invoke('makeShoot', cell);
   	}
@@ -103,7 +102,6 @@ export class BattleProccesComponent implements OnInit {
   	let hits = ship.coordinates.filter(c => c.status == CellStatus.hit).length;
   	if(ship.isDead || hits == ship.size){
   		this.sendSystemMessage('Ship was drowned ' + ShipType[ship.type]);
-  		//console.log('Ship was drowned ', ship);
   	}
   }
 

@@ -18,11 +18,6 @@
               </a>
             </li>
             <li [routerLinkActive]='["link-active"]'>
-              <a [routerLink]='["/chat"]' (click)='collapse()'>
-                <span class='glyphicon glyphicon-th-list'></span> Chat
-              </a>
-            </li>
-            <li [routerLinkActive]='["link-active"]'>
               <a [routerLink]='["/battlesea"]' (click)='collapse()'>
                 <span class='glyphicon glyphicon-th-list'></span> Battlesea
               </a>
@@ -30,11 +25,5 @@
           </ul>
         </div>
         <app-chat></app-chat>
-        <div>
-          <a class="nav-item nav-link" href="#">Submarine size 1 (4)</a><br>
-          <a class="nav-item nav-link" href="#">Destroyer size 2 (3)</a><br>
-          <a class="nav-item nav-link" href="#">Cruiser size 3 (2)</a><br>
-          <a class="nav-item nav-link" href="#">Battleship size 4 (1)</a><br>
-        </div>
     </div>
 </div>
