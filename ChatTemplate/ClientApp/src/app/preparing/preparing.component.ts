@@ -76,6 +76,11 @@ export class PreparingComponent implements OnInit {
   	}
 
   	let points = this.selectedCells;
+    if(this.getCellsAround(points, this.battlefield).some(c => c.status == CellStatus.ship)) {
+      this.sendErrorMessage('You tried to set up ship near another! Change position!')
+      return;
+    }
+    
   	if(points.length == this.getSizeOfShipType(this.selectedType)) {
   		for(let i = 0; i < points.length; i++) {
   			points[i].status = CellStatus.ship;
@@ -166,5 +171,72 @@ export class PreparingComponent implements OnInit {
   	maxNumber += this.getMaxNumberOfShipType(ShipType.cruiser);
   	maxNumber += this.getMaxNumberOfShipType(ShipType.battleship);
   	return maxNumber;
+  }
+
+  private getCellsAround(points: Cell[], battlefield: Battlefield): Cell[] {
+    let cells: Cell[] = points.slice();
+
+    if(this.isCellInRow(cells)) {
+      let startCell: Cell = cells[0];
+      let endCell: Cell = cells[cells.length - 1];
+      cells = [];
+
+      if(startCell.x > 0) {
+        startCell = battlefield.cells[startCell.y][startCell.x - 1];
+      }
+
+      if(endCell.x < battlefield.cells.length - 1) {
+        endCell = battlefield.cells[endCell.y][endCell.x + 1];
+      }
+
+      cells.push(startCell);
+      cells.push(endCell);
+
+      // add row below
+      if(startCell.y > 0) {
+        for(let i = startCell.x; i <= endCell.x; i++) {
+          cells.push(battlefield.cells[startCell.y - 1][i]);
+        }
+      }
+
+      // add row under
+      if(startCell.y < battlefield.cells.length - 1) {
+        for(let i = startCell.x; i <= endCell.x; i++) {
+          cells.push(battlefield.cells[startCell.y + 1][i]);
+        }
+      }
+    } 
+    else if (this.isCellInColumn(cells)) {
+      let startCell: Cell = cells[0];
+      let endCell: Cell = cells[cells.length - 1];
+      cells = [];
+
+      if(startCell.y > 0) {
+        startCell = battlefield.cells[startCell.y - 1][startCell.x];
+      }
+
+      if(endCell.y < battlefield.cells.length - 1) {
+        endCell = battlefield.cells[endCell.y + 1][endCell.x];
+      }
+
+      cells.push(startCell);
+      cells.push(endCell);
+
+      // add col left
+      if(startCell.x > 0) {
+        for(let i = startCell.y; i <= endCell.y; i++) {
+          cells.push(battlefield.cells[i][startCell.x - 1]);
+        }
+      }
+
+      // add col right
+      if(startCell.x < battlefield.cells.length - 1) {
+        for(let i = startCell.y; i <= endCell.y; i++) {
+          cells.push(battlefield.cells[i][startCell.x + 1]);
+        }
+      }
+    }
+
+    return cells;
   }
 }

@@ -1,28 +1,28 @@
 table {
-	width: 600px;
-	height: 600px;
+	width: 500px;
+	height: 500px;
 }
 
 .cell-clear:hover {
-	background-color: yellow;
+	background-color: khaki;
 } 
 
 .cell-clear {
-	background-color: grey;
+	background-color: lightsteelblue;
 }
 
 .cell-selected {
-	background-color: green;
+	background-color: limegreen;
 }
 
 .cell-ship {
-	background-color: blue;
+	background-color: slateblue;
 }
 
 .cell-miss {
-	background-color: white;
+	background-color: seashell;
 }
 
 .cell-hit {
-	background-color: red;
+	background-color: tomato;
 }

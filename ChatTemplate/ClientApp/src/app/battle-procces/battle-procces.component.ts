@@ -98,18 +98,22 @@ export class BattleProccesComponent implements OnInit {
   	this.checkForEnd();
   }
 
-  private checkShipIsDrowned(ship: Ship) {
+  private checkShipIsDrowned(ship: Ship): boolean {
   	let hits = ship.coordinates.filter(c => c.status == CellStatus.hit).length;
   	if(ship.isDead || hits == ship.size){
   		this.sendSystemMessage('Ship was drowned ' + ShipType[ship.type]);
+      return true;
   	}
   }
 
   private updateShip(cell: Cell, battlefield: Battlefield): void {
   	let ship: Ship = battlefield.ships.find(ship => ship.coordinates.find(c => c.x == cell.x && c.y == cell.y) != null);
 
-  	if(ship != null)
-  		this.checkShipIsDrowned(ship);
+  	if(ship != null) {
+  		if(this.checkShipIsDrowned(ship)) {
+        this.getCellsAround(ship.coordinates, battlefield).forEach(c => c.status = CellStatus.miss);
+      }
+    }
   }
 
   private updateShips(battlefield: Battlefield): void {
@@ -141,5 +145,92 @@ export class BattleProccesComponent implements OnInit {
   // chat log
   private sendSystemMessage(message: string): void {
   	this._signalr.invoke('systemMessage', message);
+  }
+
+  private getCellsAround(points: Cell[], battlefield: Battlefield): Cell[] {
+    let cells: Cell[] = points.slice();
+
+    if(this.isCellInRow(cells)) {
+      let startCell: Cell = cells[0];
+      let endCell: Cell = cells[cells.length - 1];
+      cells = [];
+
+      if(startCell.x > 0) {
+        startCell = battlefield.cells[startCell.y][startCell.x - 1];
+      }
+
+      if(endCell.x < battlefield.cells.length - 1) {
+        endCell = battlefield.cells[endCell.y][endCell.x + 1];
+      }
+
+      cells.push(startCell);
+      cells.push(endCell);
+
+      // add row below
+      if(startCell.y > 0) {
+        for(let i = startCell.x; i <= endCell.x; i++) {
+          cells.push(battlefield.cells[startCell.y - 1][i]);
+        }
+      }
+
+      // add row under
+      if(startCell.y < battlefield.cells.length - 1) {
+        for(let i = startCell.x; i <= endCell.x; i++) {
+          cells.push(battlefield.cells[startCell.y + 1][i]);
+        }
+      }
+    } 
+    else if (this.isCellInColumn(cells)) {
+      let startCell: Cell = cells[0];
+      let endCell: Cell = cells[cells.length - 1];
+      cells = [];
+
+      if(startCell.y > 0) {
+        startCell = battlefield.cells[startCell.y - 1][startCell.x];
+      }
+
+      if(endCell.y < battlefield.cells.length - 1) {
+        endCell = battlefield.cells[endCell.y + 1][endCell.x];
+      }
+
+      cells.push(startCell);
+      cells.push(endCell);
+
+      // add col left
+      if(startCell.x > 0) {
+        for(let i = startCell.y; i <= endCell.y; i++) {
+          cells.push(battlefield.cells[i][startCell.x - 1]);
+        }
+      }
+
+      // add col right
+      if(startCell.x < battlefield.cells.length - 1) {
+        for(let i = startCell.y; i <= endCell.y; i++) {
+          cells.push(battlefield.cells[i][startCell.x + 1]);
+        }
+      }
+    }
+
+    return cells;
+  }
+
+  private isCellInRow(points: Cell[]): boolean {
+    let flag: boolean = true;
+    points.sort((a, b) => a.x - b.x);
+    for(let i = 1; i < points.length; i++) {
+      if(points[i].y != points[i - 1].y || Math.abs(points[i].x - points[i - 1].x) != 1 )
+        flag = false;
+    }
+    return flag;
+  }
+
+  private isCellInColumn(points: Cell[]): boolean {
+    let flag: boolean = true;
+    points.sort((a, b) => a.y - b.y);
+    for(let i = 1; i < points.length; i++) {
+      if(points[i].x != points[i - 1].x || Math.abs(points[i].y - points[i - 1].y) != 1 )
+        flag = false;
+    }
+    return flag;
   }
 }

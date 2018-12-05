@@ -5,11 +5,11 @@
 </div>
 <div class="well container-fluid">
 	<div class="row">
-		<div class="col-lg-9">
+		<div class="col-lg-7">
 			<app-field [field]="battlefield" [isOpponent]="false" (cellClick)="cellClick($event)"></app-field>
 		</div>
-		<div class="col-lg-3">
-			<div class="ship-types">
+		<div class="col-lg-5">
+			<div class="ship-types pull-left">
 				<ul>
 					<li *ngFor="let t of ShipType | enumToKeyArray" class="m-2">
 						<button (click)="selectType(t)"
