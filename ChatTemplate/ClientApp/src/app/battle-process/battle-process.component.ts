@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { Player } from '../models/player';
 import { CellStatus } from '../models/cell-status.enum';
 import { Cell } from '../models/cell';
@@ -11,13 +11,14 @@ import { GameRoom } from '../models/gameroom';
 import { GameService } from '../services/game.service';
 import { SignalRService } from '../services/signal-r.service';
 import { GameConfiguration } from '../models/game-configuration';
+import { ServerFunctions } from '../services/server-functions';
 
 @Component({
-  selector: 'app-battle-procces',
-  templateUrl: './battle-procces.component.html',
-  styleUrls: ['./battle-procces.component.css']
+  selector: 'app-battle-process',
+  templateUrl: './battle-process.component.html',
+  styleUrls: ['./battle-process.component.css']
 })
-export class BattleProccesComponent implements OnInit {
+export class BattleProcessComponent implements OnInit {
   ShipType: typeof ShipType = ShipType;
   CellStatus : typeof CellStatus = CellStatus;
 
@@ -36,15 +37,15 @@ export class BattleProccesComponent implements OnInit {
   constructor(private _gameService: GameService, private _signalr: SignalRService) {
     this.loadGameRoom();
   	_gameService.player.subscribe(player => this.you = player);
-  	_signalr.addListener('playerShootCell', (shoot: Shoot) => this.getShootCell(shoot));
-  	_signalr.addListener('opponentDisconnect', () => { this.gameEnd = true; this.areYouWinner = true; this.centralMessage = 'Your opponent left the game!'; });
+  	_signalr.addListener(ServerFunctions.GET_SHOOT, (shoot: Shoot) => this.getShootCell(shoot));
+  	_signalr.addListener(ServerFunctions.OPPONENT_DISCONNECT, () => { this.gameEnd = true; this.areYouWinner = true; this.centralMessage = 'Your opponent left the game!'; });
   }
 
   ngOnInit() {
   }
 
   loadGameRoom(): void {
-  	this._signalr.invoke("getJoinedRoom", null).then(gameRoom => 
+  	this._signalr.invoke(ServerFunctions.GET_JOINED_ROOM, null).then(gameRoom => 
   	{
   		if(gameRoom.firstPlayer.id == this.you.id) {
   			this.yourBattlefield = gameRoom.firstBattlefield;
@@ -70,8 +71,8 @@ export class BattleProccesComponent implements OnInit {
       && cell.status != CellStatus.hit 
       && cell.status != CellStatus.miss) {
 
-  		this.isYourStep = undefined;
-  		this._signalr.invoke('makeShoot', cell);
+  		this.isYourStep = false;
+  		this._signalr.invoke(ServerFunctions.MAKE_SHOOT, cell);
   	}
   }
 
@@ -144,7 +145,7 @@ export class BattleProccesComponent implements OnInit {
 
   // chat log
   private sendSystemMessage(message: string): void {
-  	this._signalr.invoke('systemMessage', message);
+  	this._signalr.invoke(ServerFunctions.SYSTEM_MESSAGE, message);
   }
 
   private getCellsAround(points: Cell[], battlefield: Battlefield): Cell[] {

@@ -11,12 +11,11 @@ import { BattleseaComponent } from './battlesea/battlesea.component';
 import { SignalRService } from './services/signal-r.service';
 import { RoomService } from './services/room.service';
 import { RoomsComponent } from './rooms/rooms.component';
-import { BattleProccesComponent } from './battle-procces/battle-procces.component';
+import { BattleProcessComponent } from './battle-process/battle-process.component';
 import { PreparingComponent } from './preparing/preparing.component';
 import { GameService } from './services/game.service';
 import { EnumToKeyArrayPipe } from './enum-to-key-array.pipe';
 import { FieldComponent } from './field/field.component';
-import { ChatService } from './services/chat.service';
 
 const routes = [
   { path: '', component: BattleseaComponent, pathMatch: 'full' },
@@ -31,7 +30,7 @@ const routes = [
     ChatComponent,
     BattleseaComponent,
     RoomsComponent,
-    BattleProccesComponent,
+    BattleProcessComponent,
     PreparingComponent,
     EnumToKeyArrayPipe,
     FieldComponent,
@@ -42,7 +41,7 @@ const routes = [
     FormsModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [SignalRService, RoomService, GameService, ChatService],
+  providers: [SignalRService, RoomService, GameService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

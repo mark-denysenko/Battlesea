@@ -26,11 +26,11 @@ export class BattleseaComponent implements OnInit {
   ngOnInit() {
   }
 
-  saveNickname() {
+  public saveNickname(): void {
     this.gameService.setNickname(this.player.nickname);
   }
 
-  readyToBattle(battlefield: Battlefield): void {
+  public readyToBattle(battlefield: Battlefield): void {
     this.gameService.setBattlefield(battlefield);
   }
 }

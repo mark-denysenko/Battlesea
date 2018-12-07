@@ -5,8 +5,7 @@
 		</p>
 	</div>
 	<div class="input-zone">
-	  <label>Message:</label>
-	  <input class="input-zone-input" id="messageHolder" type="text" [(ngModel)]="message" />
-	  <button (click)="sendMessage()">Send</button>
+	  <input class="input-zone-input from-control" id="messageHolder" type="text" [(ngModel)]="message" />
+	  <button (click)="sendMessage()" class="btn btn-dark">Send</button>
 	</div>
 </div>

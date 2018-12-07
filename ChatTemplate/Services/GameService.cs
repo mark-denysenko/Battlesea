@@ -15,14 +15,22 @@ namespace ChatTemplate.Services
 
         public GameRoom CreateRoom(string seed)
         {
-            string roomId = DateTime.Now.ToLongTimeString()
-                + DateTime.Now.Millisecond
+            string roomId = DateTime.UtcNow.ToLongTimeString()
+                + DateTime.UtcNow.Millisecond + '|'
                 + seed;
 
             var room = new GameRoom() { RoomId = roomId };
             GameRooms.Add(room);
 
             return room;
+        }
+
+        public bool IsRoomCreator(string roomId, string playerId)
+        {
+            // check pattern in CreateRoom(string seed)
+            string creatorId = roomId.Split('|')[1];
+
+            return creatorId == playerId;
         }
 
         public bool DeleteRoom(string roomId)
@@ -58,7 +66,7 @@ namespace ChatTemplate.Services
             return null;
         }
 
-        public void PlayerLeft(string playerId)
+        public void RemovePlayerFromRoom(string playerId)
         {
             GameRoom room = GetRoomByUserId(playerId);
 
@@ -77,6 +85,7 @@ namespace ChatTemplate.Services
             }
         }
 
+        // use when disconnect
         public bool DeletePlayer(string id)
         {
             Player player = Players.FirstOrDefault(p => p.Id == id);
@@ -87,7 +96,7 @@ namespace ChatTemplate.Services
             return false;
         }
 
-        public GameRoom JoinRoom(string roomId, string connectionId)
+        public GameRoom AddPlayerToRoom(string roomId, string connectionId)
         {
             GameRoom room = GetRoomById(roomId);
             Player player = GetPlayerById(connectionId);
@@ -142,29 +151,6 @@ namespace ChatTemplate.Services
             return new Shoot { Cell = cell, PlayerId = playerId };
         }
 
-        public bool IsTwoPlayers(GameRoom room)
-        {
-            return room.firstPlayer != null && room.secondPlayer != null;
-        }
-
-        public void ExitRoom(string roomId, string connectionId)
-        {
-            GameRoom room = GetRoomById(roomId);
-            if(room?.firstPlayer?.Id == connectionId)
-            {
-                room.firstPlayer = null;
-            }
-            else if(room?.secondPlayer?.Id == connectionId)
-            {
-                room.secondPlayer = null;
-            }
-        }
-
-        public IEnumerable<Player> GetAllPlayers()
-        {
-            return Players;
-        }
-
         public Player GetPlayerById(string id)
         {
             return Players.FirstOrDefault(p => p.Id == id);
@@ -182,7 +168,18 @@ namespace ChatTemplate.Services
 
         public GameRoom GetRoomByUserId(string userId)
         {
-            return GameRooms.SingleOrDefault(r => r.firstPlayer?.Id == userId || r.secondPlayer?.Id == userId);
+            GameRoom room = null;
+            try
+            {
+                room = GameRooms.SingleOrDefault(r => r.firstPlayer?.Id == userId || r.secondPlayer?.Id == userId);
+            }
+            catch
+            {
+                // log or message about error. 
+                // Player should be only in ONE room 
+            }
+
+            return room;
         }
     }
 }

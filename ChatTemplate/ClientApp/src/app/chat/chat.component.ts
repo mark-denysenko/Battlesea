@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
 import { SignalRService } from '../services/signal-r.service';
+import { ServerFunctions } from '../services/server-functions';
 
 @Component({
   selector: 'app-chat',
@@ -21,7 +22,7 @@ export class ChatComponent implements OnInit {
 
   public sendMessage(): void {
     if(this.message.trim() != '')
-      this._chatService.invoke('sendMessageToAll', this.message);
+      this._chatService.invoke(ServerFunctions.SEND_MESSAGE, this.message);
 
     var messageHolder = document.getElementById('messageHolder');
     messageHolder.focus();

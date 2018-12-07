@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from "@aspnet/signalr";
+import { ServerFunctions } from './server-functions';
 
 @Injectable()
 export class SignalRService {
@@ -25,6 +26,6 @@ export class SignalRService {
   }
 
   public getConnectionId(): Promise<any> {
-    return this._hubConnection.invoke('getConnectionId');
+    return this._hubConnection.invoke(ServerFunctions.GET_CONNECTIONID);
   }
 }

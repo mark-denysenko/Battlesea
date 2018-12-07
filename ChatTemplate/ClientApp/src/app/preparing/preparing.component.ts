@@ -18,12 +18,12 @@ export class PreparingComponent implements OnInit {
 
   @Output() readyFunction: EventEmitter<Battlefield> = new EventEmitter();
 
-  battlefield: Battlefield;
-  gameConfiguration: GameConfiguration = new GameConfiguration();
+  public battlefield: Battlefield;
+  public gameConfiguration: GameConfiguration = new GameConfiguration();
 
-  selectedCells: Cell[] = [];
-  selectedType: ShipType = ShipType.submarine;
-  errorMessage: string = '';
+  private selectedCells: Cell[] = [];
+  public selectedType: ShipType = ShipType.submarine;
+  public errorMessage: string = '';
 
   constructor(private _signalr: SignalRService) {
   	this.battlefield = new Battlefield(this.gameConfiguration.FIELD_SIZE);
@@ -32,7 +32,7 @@ export class PreparingComponent implements OnInit {
   ngOnInit() {
   }
 
-  cellClick(cell: Cell): void {
+  public cellClick(cell: Cell): void {
   	if(cell.status == CellStatus.clear) {
   	  let newSelectedCells: Cell[] = this.selectedCells.slice();
   	  newSelectedCells.push(cell);
@@ -51,7 +51,7 @@ export class PreparingComponent implements OnInit {
 	}
   }
 
-  selectType(type): void {
+  public selectType(type): void {
   	switch (type) {
   		case 'destroyer':
   			this.selectedType = ShipType.destroyer;
@@ -69,8 +69,8 @@ export class PreparingComponent implements OnInit {
   	}
   }
 
-  createShip(): void {
-  	if(this.getCurrentNumberOfShipsByType(this.selectedType) >= this.getMaxNumberOfShipType(this.selectedType)) {
+  public createShip(): void {
+  	if(this.getCurrentNumberOfShipsByType(this.selectedType) === this.getMaxNumberOfShipType(this.selectedType)) {
   		this.sendErrorMessage('You created max number ships of this type!');
   		return;
   	}
@@ -81,7 +81,7 @@ export class PreparingComponent implements OnInit {
       return;
     }
     
-  	if(points.length == this.getSizeOfShipType(this.selectedType)) {
+  	if(points.length === this.getSizeOfShipType(this.selectedType)) {
   		for(let i = 0; i < points.length; i++) {
   			points[i].status = CellStatus.ship;
   		}
@@ -96,6 +96,7 @@ export class PreparingComponent implements OnInit {
   	return this.getMaxNumberAllShips() == this.battlefield.ships.length;
   }
 
+  // ready, not start, beacuse another player may not be ready to start
   readyToBattle(): void {
   	if(this.isAllShipsSet()) {
   		this.readyFunction.emit(this.battlefield);
@@ -127,9 +128,10 @@ export class PreparingComponent implements OnInit {
   }
 
   public getCurrentNumberOfShipsBySize(size: number): number {
-  	return this.battlefield.ships.filter(ship => ship.size == size).length;
+    return this.battlefield.ships.filter(ship => ship.size == size).length;
   }
 
+  // using for validate cells in creating ships
   private getCurrentNumberOfShipsByType(type: ShipType): number {
   	return this.battlefield.ships.filter(ship => ship.type == type).length;
   }

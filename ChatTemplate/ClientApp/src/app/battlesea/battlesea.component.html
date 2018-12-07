@@ -2,7 +2,7 @@
 <div class="player-info" *ngIf="player.status == PlayerStatus.none">
 	<h3>Your Nickname:</h3><br>
 	<input type="text" [(ngModel)]="player.nickname">
-	<button (click)="saveNickname()">Save!</button><br>
+	<button (click)="saveNickname()" class="btn btn-dark">Save!</button><br>
 	<hr>
 	<h2>Current info (nickname - id)</h2>
 	<i>{{ player.nickname }} - {{ player.id }}</i>
@@ -27,7 +27,7 @@
 
 	<div *ngIf="player.status == PlayerStatus.ready"><h2>Wait an opponent set up ships!</h2></div>
 
-	<app-battle-procces *ngIf="player.status == PlayerStatus.playing">Game proccess ...</app-battle-procces>
+	<app-battle-process *ngIf="player.status == PlayerStatus.playing">Game proccess ...</app-battle-process>
 
 	<h1 class="text-center" *ngIf="player.status == PlayerStatus.disconnected">You were disconnected =(</h1>
 </div>

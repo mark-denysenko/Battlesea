@@ -1,32 +1,27 @@
-<div class="room-holder">
-	<h2>Rooms</h2>
-	<hr>
-	<div *ngFor="let r of roomService.rooms" class="well" >
-		<p>Room: <b>{{ r.roomId }}</b></p>
-		<button (click)="roomService.deleteRoom(r.roomId)" class="btn btn-danger pull-right">Delete Room</button>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2>Rooms</h2>
+	</div>
+	<div class="panel-body">
+		<div *ngFor="let room of rooms" class="well" >
+			<p>Room: <b>{{ room.roomId }}</b></p>
 
-		<button class="btn btn-success" 
-				*ngIf="currentRoom && r.roomId == currentRoom.roomId">
-			Joined!
-		</button>
-		<button (click)="roomService.joinRoom(r.roomId)" 
-				class="btn btn-info pull-left" 
-				*ngIf="!roomService.joinedRoom && (!r.firstPlayer || !r.secondPlayer)">
-			Join
-		</button>
-		<button (click)="roomService.exitRoom(r.roomId)" 
-				class="btn btn-dark" 
-				*ngIf="roomService.joinedRoom && roomService.joinedRoom.roomId == r.roomId">
-			Exit
-		</button>
-		<p class="text-center">
-			<span *ngIf="r.firstPlayer">{{ r.firstPlayer.nickname }}</span>
-			<b>VS</b>
-			<span *ngIf="r.secondPlayer">{{ r.secondPlayer.nickname }}</span>
-		</p>
+			<button (click)="deleteRoom(room)" class="btn btn-danger pull-right">Delete Room</button>
+
+			<button (click)="joinToRoom(room)" 
+					class="btn btn-info pull-left" 
+					*ngIf="!room.firstPlayer || !room.secondPlayer">
+				Join
+			</button>
+			<p class="text-center">
+				<span *ngIf="room.firstPlayer">{{ room.firstPlayer.nickname }}</span>
+				<b>VS</b>
+				<span *ngIf="room.secondPlayer">{{ room.secondPlayer.nickname }}</span>
+			</p>
+		</div>
 	</div>
 
-	<div>
-		<button (click)="roomService.createRoom()" class="btn btn-primary">Create Room</button>
+	<div class="panel-footer">
+		<button (click)="createRoom()" class="btn btn-primary">Create Room</button>
 	</div>
 </div>

@@ -7,7 +7,6 @@ namespace ChatTemplate.Models
 {
     public enum ShipType
     {
-        //none       = 0,
         submarine = 1,
         destroyer = 2,
         cruiser = 3,

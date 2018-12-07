@@ -10,8 +10,29 @@ import { RoomService } from '../services/room.service';
 })
 export class RoomsComponent implements OnInit {
 
-  constructor(public roomService: RoomService) { }
+  public rooms: GameRoom[] = [];
+
+  constructor(private roomService: RoomService) {
+  	this.roomService.updateRoomsEvent.subscribe(rooms => this.rooms = rooms);
+  }
 
   ngOnInit() {
+  }
+
+  public createRoom(): void {
+  	this.roomService.createRoom();
+  }
+
+  public joinToRoom(room: GameRoom): void {
+  	this.roomService.joinRoom(room.roomId);
+  }
+
+  public exitFromRoom(room: GameRoom): void {
+  	this.roomService.exitRoom(room.roomId);
+  }
+
+  // only for own-created
+  public deleteRoom(room: GameRoom): void {
+  	this.roomService.deleteRoom(room.roomId);
   }
 }

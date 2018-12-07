@@ -1,6 +1,7 @@
 table {
-	width: 500px;
-	height: 500px;
+	width: 550px;
+	height: 550px;
+	margin: 20px;
 }
 
 .cell-clear:hover {
