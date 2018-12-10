@@ -13,6 +13,7 @@ export class FieldComponent implements OnInit {
 
   @Input() field: Battlefield;
   @Input() isOpponent: boolean;
+  @Input() isEndGame: boolean;
   @Output() cellClick: EventEmitter<Cell> = new EventEmitter();
 
   constructor() { }

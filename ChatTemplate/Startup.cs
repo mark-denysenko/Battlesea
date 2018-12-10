@@ -57,6 +57,8 @@ namespace ChatTemplate
                     template: "{controller}/{action=Index}/{id?}");
             });
 
+            app.UseFileServer();
+
             app.UseSignalR(routes =>
             {
                 routes.MapHub<GameHub>("/game");

@@ -21,9 +21,9 @@ table {
 }
 
 .cell-miss {
-	background-color: seashell;
+	background-color: seashell !important;
 }
 
 .cell-hit {
-	background-color: tomato;
+	background-color: tomato !important;
 }

@@ -1,7 +1,7 @@
 <div class="container-fluid">
-	<div class="row" *ngIf="!gameEnd">
+	<div class="row">
 		<div class="col-12" align="center">
-			<app-field [field]="yourBattlefield" [isOpponent]="false"></app-field>
+			<app-field [field]="yourBattlefield" [isOpponent]="false" [isEndGame]="gameEnd"></app-field>
 		</div>
 	</div>
 	<div class="row text-center" height="50">
@@ -14,9 +14,9 @@
 			<h2 [ngClass]="{'bg-primary': !isYourStep }">{{ opponent.nickname }}</h2>
 		</div>
 	</div>
-	<div class="row" *ngIf="!gameEnd">
+	<div class="row">
 		<div class="col-12" align="center">
-			<app-field [field]="opponentBattlefield" [isOpponent]="true" (cellClick)="makeShootCell($event)"></app-field>
+			<app-field [field]="opponentBattlefield" [isOpponent]="true" [isEndGame]="gameEnd" (cellClick)="makeShootCell($event)"></app-field>
 		</div>
 	</div>
 </div>

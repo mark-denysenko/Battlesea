@@ -82,6 +82,9 @@ namespace ChatTemplate.Services
                     room.secondPlayer = null;
                     room.secondBattlefield = null;
                 }
+
+                if (room.firstPlayer == null && room.secondPlayer == null)
+                    DeleteRoom(room.RoomId);
             }
         }
 

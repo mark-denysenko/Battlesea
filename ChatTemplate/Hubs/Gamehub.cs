@@ -1,4 +1,5 @@
-﻿using ChatTemplate.Models;
+﻿using Battleship.Models;
+using ChatTemplate.Models;
 using ChatTemplate.Services;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
@@ -147,17 +148,12 @@ namespace ChatTemplate.Hubs
         public void SendMessageToAll(string message)
         {
             string senderNickname = _gameService.GetPlayerById(Context.ConnectionId).Nickname;
-            Clients.All.SendAsync(MESSAGE_TO_PLAYER, CreateMessage(senderNickname, message));
+            Clients.All.SendAsync(MESSAGE_TO_PLAYER, new Message { Author = senderNickname, Body = message, IsSystem = false, PostTime = DateTime.UtcNow.ToLocalTime()});
         }
 
         public void SystemMessage(string message)
         {
-            Clients.Client(Context.ConnectionId).SendAsync(MESSAGE_TO_PLAYER, "!> SYSTEM: " + message);
-        }
-
-        private string CreateMessage(string nick, string message)
-        {
-            return $"> {nick} : {message}";
+            Clients.Client(Context.ConnectionId).SendAsync(MESSAGE_TO_PLAYER, new Message { Author = "SYSTEM", Body = message, IsSystem = true, PostTime = DateTime.UtcNow.ToLocalTime()});
         }
         #endregion
     }

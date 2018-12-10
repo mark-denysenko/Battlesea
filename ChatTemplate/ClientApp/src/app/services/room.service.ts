@@ -14,7 +14,7 @@ export class RoomService {
   public updateRoomsEvent: Subject<GameRoom[]> = new BehaviorSubject<GameRoom[]>(new Array<GameRoom>());
 
   constructor(private signalrService: SignalRService, private http: HttpClient, @Inject('BASE_URL') _baseUrl: string) {
-  	this.requestUrl = _baseUrl + 'api/Game/';
+  	this.requestUrl = _baseUrl + ServerFunctions.API_ENDPOINT;
 
     this.updateRoomsEvent.subscribe(rooms => this.rooms = rooms);
   	this.signalrService.addListener(ServerFunctions.ROOMS_UPDATE_EVENT, (rooms: GameRoom[]) => this.updateRoomsEvent.next(rooms));

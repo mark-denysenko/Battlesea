@@ -10,7 +10,7 @@
 		    [ngClass]="{ 
 		    	'cell-clear': cell.status == CellStatus.clear || (isOpponent && cell.status == CellStatus.ship),  
 		    	'cell-selected': cell.status == CellStatus.selected, 
-		    	'cell-ship': cell.status == CellStatus.ship && !isOpponent,
+		    	'cell-ship': cell.status == CellStatus.ship && (!isOpponent || isEndGame),
 		    	'cell-miss': cell.status == CellStatus.miss, 
 		    	'cell-hit': cell.status == CellStatus.hit
 		    }">&nbsp;
