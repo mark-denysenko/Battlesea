@@ -24,7 +24,8 @@ namespace ChatTemplate
             services.AddSignalR(hubOptions =>
             {
                 hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(10);
-            });
+            })
+            .AddAzureSignalR(@"Endpoint=https://battleship.service.signalr.net;AccessKey=YAHy6BdicVfcd6LDW93kMjlorbCzjeX5tEQaIs+ZPWM=;Version=1.0;");
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -59,7 +60,7 @@ namespace ChatTemplate
 
             app.UseFileServer();
 
-            app.UseSignalR(routes =>
+            app.UseAzureSignalR(routes =>
             {
                 routes.MapHub<GameHub>("/game");
             });
