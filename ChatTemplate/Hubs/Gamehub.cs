@@ -79,7 +79,7 @@ namespace ChatTemplate.Hubs
         public async Task ExitRoom(string roomId)
         {
             _gameService.RemovePlayerFromRoom(Context.ConnectionId);
-            UpdateClientsRooms();
+            await UpdateClientsRooms();
         }
 
         public async Task UpdatePlayer(string connId = null)
@@ -97,14 +97,14 @@ namespace ChatTemplate.Hubs
             await UpdatePlayer();
             if(room.firstBattlefield != null && room.secondBattlefield != null)
             {
-                Clients.Client(room.firstPlayer.Id).SendAsync(START_PLAYING);
-                Clients.Client(room.secondPlayer.Id).SendAsync(START_PLAYING);
+                await Clients.Client(room.firstPlayer.Id).SendAsync(START_PLAYING);
+                await Clients.Client(room.secondPlayer.Id).SendAsync(START_PLAYING);
             }
         }
 
         public async Task UpdateClientsRooms()
         {
-            Clients.All.SendAsync(ROOMS_UPDATE, _gameService.GetAllRooms());
+            await Clients.All.SendAsync(ROOMS_UPDATE, _gameService.GetAllRooms());
         }
 
         public Player GetPlayer()
@@ -130,7 +130,7 @@ namespace ChatTemplate.Hubs
 
             // Update all rooms for another players, because need to change Nickname in all rooms
             // it helps to fater find room with friend's nickname
-            UpdateClientsRooms();
+            await UpdateClientsRooms();
             return player;
         }
 
@@ -139,8 +139,8 @@ namespace ChatTemplate.Hubs
             GameRoom room = _gameService.GetRoomByUserId(Context.ConnectionId);
             Shoot shoot = _gameService.MakeShoot(cell, Context.ConnectionId);
 
-            Clients.Client(room.firstPlayer.Id).SendAsync(SHOOT_CELL, shoot);
-            Clients.Client(room.secondPlayer.Id).SendAsync(SHOOT_CELL, shoot);
+            await Clients.Client(room.firstPlayer.Id).SendAsync(SHOOT_CELL, shoot);
+            await Clients.Client(room.secondPlayer.Id).SendAsync(SHOOT_CELL, shoot);
         }
 
         #region Chat

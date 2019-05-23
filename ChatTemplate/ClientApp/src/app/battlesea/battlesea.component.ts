@@ -18,16 +18,17 @@ export class BattleseaComponent implements OnInit {
   PlayerStatus : typeof PlayerStatus = PlayerStatus;
 
   public player: Player;
+  public inputNickname: string;
 
   constructor(private gameService: GameService) {
-    gameService.player.subscribe(player => this.player = player);
   }
-
+  
   ngOnInit() {
+    this.gameService.player.subscribe(player => { this.player = player; this.inputNickname = player.nickname; });
   }
 
   public saveNickname(): void {
-    this.gameService.setNickname(this.player.nickname);
+    this.gameService.setNickname(this.inputNickname);
   }
 
   public readyToBattle(battlefield: Battlefield): void {

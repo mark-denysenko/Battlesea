@@ -57,3 +57,13 @@ li.link-active a:focus {
         text-overflow: ellipsis;
     }
 }
+
+.treasure-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.treasure-image {
+    height: 150px;
+}

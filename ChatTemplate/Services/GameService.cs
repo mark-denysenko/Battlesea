@@ -70,6 +70,8 @@ namespace ChatTemplate.Services
         {
             GameRoom room = GetRoomByUserId(playerId);
 
+            Players.FirstOrDefault(p => p.Id == playerId).status = PlayerStatus.none;
+
             if(room != null)
             {
                 if (room.firstPlayer?.Id == playerId)

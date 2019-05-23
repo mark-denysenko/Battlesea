@@ -19,28 +19,28 @@
 					</li>
 				</ul>
 			</div>
-			<button *ngIf="!isAllShipsSet()" (click)="createShip()" class="btn btn-success">Create Ship</button>
-			<button *ngIf="isAllShipsSet()" (click)="readyToBattle()" class="btn btn-warning">Ready</button>
 			<div>
 				<b>Total ships</b>
 				<ul>
 					<li>
-						SUBMARINEs: {{ getCurrentNumberOfShipsBySize(gameConfiguration.SIZE_SUBMARINE) }} 
+						SUBMARINEs (1 cell): {{ getCurrentNumberOfShipsBySize(gameConfiguration.SIZE_SUBMARINE) }} 
 						(max: {{ gameConfiguration.NUMBER_SUBMARINE }})
-				</li>
+					</li>
 					<li>
-						DESTROYERs: {{ getCurrentNumberOfShipsBySize(gameConfiguration.SIZE_DESTROYER) }} 
+						DESTROYERs (2 cells): {{ getCurrentNumberOfShipsBySize(gameConfiguration.SIZE_DESTROYER) }} 
 						(max: {{ gameConfiguration.NUMBER_DESTROYER }})
 					</li>
 					<li>
-						CRUISERs: {{ getCurrentNumberOfShipsBySize(gameConfiguration.SIZE_CRUISER) }} 
+						CRUISERs (3 cells): {{ getCurrentNumberOfShipsBySize(gameConfiguration.SIZE_CRUISER) }} 
 						(max: {{ gameConfiguration.NUMBER_CRUISER }})
 					</li>
 					<li>
-						BATTLESHIPs: {{ getCurrentNumberOfShipsBySize(gameConfiguration.SIZE_BATTLESHIP) }} 
+						BATTLESHIPs (4 cells): {{ getCurrentNumberOfShipsBySize(gameConfiguration.SIZE_BATTLESHIP) }} 
 						(max: {{ gameConfiguration.NUMBER_BATTLESHIP }})
 					</li>
 				</ul>
+				<button *ngIf="!isAllShipsSet()" (click)="createShip()" class="btn btn-success">Create Ship</button>
+				<button *ngIf="isAllShipsSet()" (click)="readyToBattle()" class="btn btn-warning">Ready</button>
 			</div>
 		</div>
 	</div>

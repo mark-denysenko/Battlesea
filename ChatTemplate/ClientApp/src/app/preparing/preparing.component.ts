@@ -33,22 +33,22 @@ export class PreparingComponent implements OnInit {
   }
 
   public cellClick(cell: Cell): void {
-  	if(cell.status == CellStatus.clear) {
-  	  let newSelectedCells: Cell[] = this.selectedCells.slice();
-  	  newSelectedCells.push(cell);
-  	  if((this.isCellInColumn(newSelectedCells) || this.isCellInRow(newSelectedCells))) {
-	      cell.status = CellStatus.selected;
-	  	  this.selectedCells.push(cell);
-	   }
-	   else {
-	   	this.sendErrorMessage('Selected cell stay not in a row or a column with another, or stay near another ship!');
-	   }
-	} else if (cell.status == CellStatus.selected) {
-		cell.status = CellStatus.clear;
-		this.selectedCells = this.selectedCells.filter(c => c.status == CellStatus.selected);
-	} else {
-	    this.sendErrorMessage('Select free cell!');
-	}
+      if(cell.status == CellStatus.clear) {
+        let newSelectedCells: Cell[] = this.selectedCells.slice();
+        newSelectedCells.push(cell);
+        if((this.isCellInColumn(newSelectedCells) || this.isCellInRow(newSelectedCells))) {
+          cell.status = CellStatus.selected;
+          this.selectedCells.push(cell);
+      }
+      else {
+        this.sendErrorMessage('Selected cell stay not in a row or a column with another, or stay near another ship!');
+      }
+    } else if (cell.status == CellStatus.selected) {
+      cell.status = CellStatus.clear;
+      this.selectedCells = this.selectedCells.filter(c => c.status == CellStatus.selected);
+    } else {
+        this.sendErrorMessage('Select free cell!');
+    }
   }
 
   public selectType(type): void {
@@ -98,6 +98,15 @@ export class PreparingComponent implements OnInit {
 
   // ready, not start, beacuse another player may not be ready to start
   readyToBattle(): void {
+
+    this.battlefield.cells.forEach((element) => {
+      element.forEach(cell => {
+            if(cell.status == CellStatus.selected) {
+                cell.status = CellStatus.clear;
+            }
+        })
+    });
+
   	if(this.isAllShipsSet()) {
   		this.readyFunction.emit(this.battlefield);
   	}

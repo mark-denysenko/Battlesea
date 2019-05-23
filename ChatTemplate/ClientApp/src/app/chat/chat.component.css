@@ -40,3 +40,7 @@
 button:hover {
   color: grey;
 }
+
+input {
+  width: 100%;
+}

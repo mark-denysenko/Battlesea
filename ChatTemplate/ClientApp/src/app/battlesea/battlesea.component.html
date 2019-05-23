@@ -1,11 +1,13 @@
 
 <div class="player-info" *ngIf="player.status == PlayerStatus.none">
-	<h3>Your Nickname:</h3><br>
-	<input type="text" [(ngModel)]="player.nickname">
-	<button (click)="saveNickname()" class="btn btn-dark">Save!</button><br>
-	<hr>
-	<h2>Current info (nickname - id)</h2>
-	<i>{{ player.nickname }} - {{ player.id }}</i>
+	<div>
+		<h3>Your Nickname: {{ player.nickname }}</h3><br>
+		<input type="text" [(ngModel)]="inputNickname">
+		<button (click)="saveNickname()" class="btn btn-dark">Save</button><br>
+	</div>
+	<!-- <h2>Current info (nickname - id)</h2> -->
+	<!-- <i>{{ player.nickname }} - {{ player.id }}</i> -->
+	<img class="ship-image" src="/assets/images/main_ship.png"/>
 </div>
 
 <div align="center">
@@ -14,13 +16,14 @@
 	<!-- waiting for another player -->
 	<div *ngIf="player.status == PlayerStatus.joined" class="text-center">
 		<h1>
-			Nickname: {{ player.nickname }}
+			YOU: ({{ player.nickname }})
 			<br>
-			ID: {{ player.id }}
+			<!-- ID: {{ player.id }} -->
 		</h1>
 		<hr><h3>VS</h3><hr>
 		<h1>???</h1><br>
 		<h4>waiting opponent ...</h4>
+		<img class="pirate-opponent" src="/assets/images/pirate.png"/>
 	</div>
 
 	<app-preparing *ngIf="player.status == PlayerStatus.preparing" (readyFunction)="readyToBattle($event)"></app-preparing>

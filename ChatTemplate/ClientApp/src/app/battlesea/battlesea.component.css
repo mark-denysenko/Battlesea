@@ -1,3 +1,16 @@
 div {
 	padding: 5px;
 }
+
+.ship-image {
+	max-height: 170px;
+}
+
+.player-info {
+	display: flex;
+	justify-content: space-around;
+}
+
+.pirate-opponent {
+	height: 400px;
+}
